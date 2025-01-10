@@ -23,6 +23,14 @@ public class ChessBoard {
     }
 
     /**
+     * Removes a chess piece from the chessboard
+     * @param piece the piece to remove
+     */
+    public void removePiece(ChessPiece piece) {
+        throw new RuntimeException("Not implemented");
+    }
+
+    /**
      * Gets a chess piece on the chessboard
      *
      * @param position The position to get the piece from
