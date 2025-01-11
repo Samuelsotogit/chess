@@ -9,7 +9,32 @@ package chess;
 public class ChessBoard {
 
     public ChessBoard() {
-        
+        ChessPiece.PieceType[][] board;
+        board = new ChessPiece.PieceType[8][8];
+        for (int i = 0; i < 8; i++) {
+            board[1][i] = ChessPiece.PieceType.PAWN;
+            board[6][i] = ChessPiece.PieceType.PAWN;
+        }
+
+        // Black pieces
+        board[0][0] = ChessPiece.PieceType.ROOK;
+        board[0][1] = ChessPiece.PieceType.KNIGHT;
+        board[0][2] = ChessPiece.PieceType.BISHOP;
+        board[0][3] = ChessPiece.PieceType.QUEEN;
+        board[0][4] = ChessPiece.PieceType.KNIGHT;
+        board[0][5] = ChessPiece.PieceType.BISHOP;
+        board[0][6] = ChessPiece.PieceType.KNIGHT;
+        board[0][7] = ChessPiece.PieceType.ROOK;
+
+        // White pieces
+        board[7][0] = ChessPiece.PieceType.ROOK;
+        board[7][1] = ChessPiece.PieceType.KNIGHT;
+        board[7][2] = ChessPiece.PieceType.BISHOP;
+        board[7][3] = ChessPiece.PieceType.QUEEN;
+        board[7][4] = ChessPiece.PieceType.KNIGHT;
+        board[7][5] = ChessPiece.PieceType.BISHOP;
+        board[7][6] = ChessPiece.PieceType.KNIGHT;
+        board[7][7] = ChessPiece.PieceType.ROOK;
     }
 
     /**
