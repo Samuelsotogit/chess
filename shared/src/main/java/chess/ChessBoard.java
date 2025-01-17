@@ -8,35 +8,57 @@ package chess;
  */
 public class ChessBoard {
 
+    private ChessPiece[][] board;
+
     public ChessBoard() {
-        ChessPiece.PieceType[][] board;
-        board = new ChessPiece.PieceType[8][8];
-        for (int i = 0; i < 8; i++) {
-            board[1][i] = ChessPiece.PieceType.PAWN;
-            board[6][i] = ChessPiece.PieceType.PAWN;
-        }
-
-        // Black pieces
-        board[0][0] = ChessPiece.PieceType.ROOK;
-        board[0][1] = ChessPiece.PieceType.KNIGHT;
-        board[0][2] = ChessPiece.PieceType.BISHOP;
-        board[0][3] = ChessPiece.PieceType.QUEEN;
-        board[0][4] = ChessPiece.PieceType.KNIGHT;
-        board[0][5] = ChessPiece.PieceType.BISHOP;
-        board[0][6] = ChessPiece.PieceType.KNIGHT;
-        board[0][7] = ChessPiece.PieceType.ROOK;
-
-        // White pieces
-        board[7][0] = ChessPiece.PieceType.ROOK;
-        board[7][1] = ChessPiece.PieceType.KNIGHT;
-        board[7][2] = ChessPiece.PieceType.BISHOP;
-        board[7][3] = ChessPiece.PieceType.QUEEN;
-        board[7][4] = ChessPiece.PieceType.KNIGHT;
-        board[7][5] = ChessPiece.PieceType.BISHOP;
-        board[7][6] = ChessPiece.PieceType.KNIGHT;
-        board[7][7] = ChessPiece.PieceType.ROOK;
+        board = new ChessPiece[8][8];
+        setUpBoard();
     }
 
+        private void setUpBoard() {
+
+            //Initialize white Pieces.
+            ChessPiece whitePawn = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
+            ChessPiece whiteRook = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
+            ChessPiece whiteKnight = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT);
+            ChessPiece whiteBishop = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP);
+            ChessPiece whiteQueen = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN);
+            ChessPiece whiteKing = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KING);
+
+            //Initialize black pieces
+            ChessPiece blackPawn = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
+            ChessPiece blackRook = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK);
+            ChessPiece blackKnight = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT);
+            ChessPiece blackBishop = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP);
+            ChessPiece blackQueen = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.QUEEN);
+            ChessPiece blackKing = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KING);
+
+            // Initialize the starting board
+            for (int i = 0; i < 8; i++) {
+                board[1][i] = whitePawn;
+                board[7][i] = blackPawn;
+            }
+
+            // White pieces
+            board[0][0] = whiteRook;
+            board[0][1] = whiteKnight;
+            board[0][2] = whiteBishop;
+            board[0][3] = whiteQueen;
+            board[0][4] = whiteKing;
+            board[0][5] = whiteBishop;
+            board[0][6] = whiteKnight;
+            board[0][7] = whiteRook;
+
+            // Black pieces
+            board[7][0] = blackRook;
+            board[7][1] = blackKnight;
+            board[7][2] = blackBishop;
+            board[7][3] = blackQueen;
+            board[7][4] = blackKing;
+            board[7][5] = blackBishop;
+            board[7][6] = blackKnight;
+            board[7][7] = blackRook;
+        }
     /**
      * Adds a chess piece to the chessboard
      *
@@ -44,6 +66,7 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
+
         throw new RuntimeException("Not implemented");
     }
 
