@@ -13,7 +13,6 @@ public class ChessPiece {
 
     private ChessGame.TeamColor color;
     private ChessPiece.PieceType typeOfPiece;
-    private PieceMoveCalculator PieceMoveCalculator;
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.color = pieceColor;
@@ -54,7 +53,27 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        return this.PieceMoveCalculator.possibleMoves(board, myPosition);
+        switch (typeOfPiece) {
+            case PieceType.PAWN -> {
+                return new PawnMove().possibleMoves(board, myPosition);
+            }
+            case PieceType.ROOK -> {
+                return new RookMove().possibleMoves(board, myPosition);
+            }
+            case PieceType.KNIGHT -> {
+                return new KnightMove().possibleMoves(board, myPosition);
+            }
+            case PieceType.BISHOP -> {
+                return new BishopMove().possibleMoves(board, myPosition);
+            }
+            case PieceType.QUEEN -> {
+                return new QueenMove().possibleMoves(board, myPosition);
+            }
+            case PieceType.KING -> {
+                return new KingMove().possibleMoves(board, myPosition);
+            }
+        }
+        throw new RuntimeException();
     }
 
     @Override
@@ -63,11 +82,11 @@ public class ChessPiece {
             return false;
         }
         ChessPiece that = (ChessPiece) o;
-        return color == that.color && typeOfPiece == that.typeOfPiece && Objects.equals(PieceMoveCalculator, that.PieceMoveCalculator);
+        return color == that.color && typeOfPiece == that.typeOfPiece;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(color, typeOfPiece, PieceMoveCalculator);
+        return Objects.hash(color, typeOfPiece);
     }
 }
