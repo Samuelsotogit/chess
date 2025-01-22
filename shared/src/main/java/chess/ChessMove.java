@@ -1,5 +1,7 @@
 package chess;
 
+import java.util.Objects;
+
 /**
  * Represents moving a chess piece on a chessboard
  * <p>
@@ -7,23 +9,29 @@ package chess;
  * signature of the existing methods.
  */
 public class ChessMove {
+    private ChessPosition fromPosition;
+    private ChessPosition toPosition;
+    private ChessPiece.PieceType PieceToPromoteTo;
 
     public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
                      ChessPiece.PieceType promotionPiece) {
+        this.fromPosition = startPosition;
+        this.toPosition = endPosition;
+        this.PieceToPromoteTo = promotionPiece;
     }
 
     /**
      * @return ChessPosition of starting location
      */
     public ChessPosition getStartPosition() {
-        throw new RuntimeException("Not implemented");
+        return this.fromPosition;
     }
 
     /**
      * @return ChessPosition of ending location
      */
     public ChessPosition getEndPosition() {
-        throw new RuntimeException("Not implemented");
+        return this.toPosition;
     }
 
     /**
@@ -33,6 +41,30 @@ public class ChessMove {
      * @return Type of piece to promote a pawn to, or null if no promotion
      */
     public ChessPiece.PieceType getPromotionPiece() {
-        throw new RuntimeException("Not implemented");
+        if (this.PieceToPromoteTo == null) { //How would you get the promotion piece?
+            return null;
+        }
+        return this.PieceToPromoteTo;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessMove chessMove = (ChessMove) o;
+        return Objects.equals(fromPosition, chessMove.fromPosition) && Objects.equals(toPosition, chessMove.toPosition) && PieceToPromoteTo == chessMove.PieceToPromoteTo;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fromPosition, toPosition, PieceToPromoteTo);
+    }
+
+    @Override
+    public String toString() {
+        return
+                fromPosition + " -> " + toPosition +
+                " [" + PieceToPromoteTo + "]";
     }
 }
