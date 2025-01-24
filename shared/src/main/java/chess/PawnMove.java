@@ -79,7 +79,7 @@ public class PawnMove implements PieceMoveCalculator {
                 /* Possible to capture diagonally left */
                 if (leftDiagonalPiece == null) {
                     break;
-                } else if (rightDiagonalPiece.getTeamColor() != pawn.getTeamColor()) {
+                } else if (leftDiagonalPiece.getTeamColor() != pawn.getTeamColor()) {
                     moves.add(new ChessMove(position, diagonallyLeft, null));
                     break;
                 }
