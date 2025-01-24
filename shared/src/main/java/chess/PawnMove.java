@@ -57,22 +57,17 @@ public class PawnMove implements PieceMoveCalculator {
                 //Option 1: Forward two only on first move.
                 if (pawn.getTeamColor() == ChessGame.TeamColor.WHITE && position.getRow() == 2) {
                     if (nextPiece == null && forwardTwoPiece == null) {
-                        moves.add(new ChessMove(position, nextPosition, null));
                         moves.add(new ChessMove(nextPosition, forwardTwoPosition, null));
-                        break;
                     }
                 }
                 else if (pawn.getTeamColor() == ChessGame.TeamColor.BLACK && position.getRow() == 7) {
                     if (nextPiece == null && forwardTwoPiece == null) {
-                        moves.add(new ChessMove(position, nextPosition, null));
                         moves.add(new ChessMove(nextPosition, forwardTwoPosition, null));
-                        break;
                     }
                 }
                 //Option 2: Forward one.
                 if (nextPiece == null) {
                     moves.add(new ChessMove(position, nextPosition, null));
-                    break;
                 }
                 /* Possible to capture diagonally right */
                 if (rightDiagonalPiece == null) {
