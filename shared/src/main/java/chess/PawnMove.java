@@ -5,10 +5,14 @@ import java.util.Collection;
 
 public class PawnMove implements PieceMoveCalculator {
 
+    /* Maybe use for promotion piece?c*/
+    private ChessPiece promotionPiece;
+
     @Override
     public Collection<ChessMove> possibleMoves(ChessBoard board, ChessPosition position) {
         Collection<ChessMove> moves = new ArrayList<>();
         ChessPiece piece = board.getPiece(position);
+
         if (piece == null) {
             return moves;
         }
@@ -39,7 +43,7 @@ public class PawnMove implements PieceMoveCalculator {
             ChessPosition forwardTwoPosition = new ChessPosition(nextPosition.getRow() + rowIncrement, nextPosition.getColumn());
 
             //Only add moves while you are in bounds
-            while (board.isInbounds(nextPosition) && board.isInbounds(forwardTwoPosition)) {
+            if (board.isInbounds(nextPosition)) {
 
                 //Check if you can assign the diagonal pieces
                 ChessPiece rightDiagonalPiece = null;
@@ -52,40 +56,60 @@ public class PawnMove implements PieceMoveCalculator {
                 }
 
                 ChessPiece nextPiece = board.getPiece(nextPosition);
-                ChessPiece forwardTwoPiece = board.getPiece(forwardTwoPosition);
 
                 //Option 1: Forward two only on first move.
                 if (pawn.getTeamColor() == ChessGame.TeamColor.WHITE && position.getRow() == 2) {
+                    ChessPiece forwardTwoPiece = board.getPiece(forwardTwoPosition);
                     if (nextPiece == null && forwardTwoPiece == null) {
                         moves.add(new ChessMove(position, forwardTwoPosition, null));
                     }
                 } else if (pawn.getTeamColor() == ChessGame.TeamColor.BLACK && position.getRow() == 7) {
+                    ChessPiece forwardTwoPiece = board.getPiece(forwardTwoPosition);
                     if (nextPiece == null && forwardTwoPiece == null) {
                         moves.add(new ChessMove(position, forwardTwoPosition, null));
                     }
                 }
                 //Option 2: Forward one.
                 if (nextPiece == null) {
-                    moves.add(new ChessMove(position, nextPosition, null));
+                    /*Implement the promotion logic everywhere it needs to go*/
+                    if (nextPosition.getRow() == 8 || nextPosition.getRow() == 1) {
+                        moves.add(new ChessMove(position, nextPosition, ChessPiece.PieceType.QUEEN));
+                        moves.add(new ChessMove(position, nextPosition, ChessPiece.PieceType.ROOK));
+                        moves.add(new ChessMove(position, nextPosition, ChessPiece.PieceType.BISHOP));
+                        moves.add(new ChessMove(position, nextPosition, ChessPiece.PieceType.KNIGHT));
+                    } else {
+                        moves.add(new ChessMove(position, nextPosition, null));
+                    }
                 }
                 /* Possible to capture diagonally right */
                 if (rightDiagonalPiece == null) {
                     moves.add(new ChessMove(position, diagonallyRight, null));
                     moves.remove(new ChessMove(position, diagonallyRight, null));
                 } else if (rightDiagonalPiece.getTeamColor() != pawn.getTeamColor()) {
-                    moves.add(new ChessMove(position, diagonallyRight, null));
-                    break;
+                    if (diagonallyRight.getRow() == 8 || diagonallyRight.getRow() == 1) {
+                        moves.add(new ChessMove(position, diagonallyRight, ChessPiece.PieceType.QUEEN));
+                        moves.add(new ChessMove(position, diagonallyRight, ChessPiece.PieceType.ROOK));
+                        moves.add(new ChessMove(position, diagonallyRight, ChessPiece.PieceType.BISHOP));
+                        moves.add(new ChessMove(position, diagonallyRight, ChessPiece.PieceType.KNIGHT));
+                    } else {
+                        moves.add(new ChessMove(position, diagonallyRight, null));
+                    }
                 }
                 /* Possible to capture diagonally left */
                 if (leftDiagonalPiece == null) {
                     moves.add(new ChessMove(position, diagonallyLeft, null));
                     moves.remove(new ChessMove(position, diagonallyLeft, null));
                 } else if (leftDiagonalPiece.getTeamColor() != pawn.getTeamColor()) {
-                    moves.add(new ChessMove(position, diagonallyLeft, null));
-                    break;
+                    if (diagonallyLeft.getRow() == 8 || diagonallyLeft.getRow() == 1) {
+                        moves.add(new ChessMove(position, diagonallyLeft, ChessPiece.PieceType.QUEEN));
+                        moves.add(new ChessMove(position, diagonallyLeft, ChessPiece.PieceType.ROOK));
+                        moves.add(new ChessMove(position, diagonallyLeft, ChessPiece.PieceType.BISHOP));
+                        moves.add(new ChessMove(position, diagonallyLeft, ChessPiece.PieceType.KNIGHT));
+                    } else {
+                        moves.add(new ChessMove(position, diagonallyLeft, null));
+                    }
                 }
                 /* do nothing if next square forward has friendly piece */
-                break;
             }
             //Option 1: Forward two only on first move.
             //Option 2: Forward one.

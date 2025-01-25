@@ -41,7 +41,7 @@ public class KingMove implements PieceMoveCalculator {
                         moves.add(new ChessMove(position, nextPosition, null));
                         break;
                     }
-                    //As soon as there is a piece in the next column, that rook can be moved to that position as a valid move (taking).
+                    //If there is a piece in the next position, that king can be moved to that position as a valid move (taking).
                     else if (nextPiece.getTeamColor() != king.getTeamColor()) {
                         moves.add(new ChessMove(position, nextPosition, null));
                         //Stop adding moves if capturing a piece.

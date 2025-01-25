@@ -109,6 +109,15 @@ public class ChessBoard {
         setUpBoard();
     }
 
+    /**
+     *
+     * @param myPosition the position my piece is in.
+     * @return true if my position is within bounds, else false.
+     */
+    public boolean isInbounds(ChessPosition myPosition) {
+        return myPosition.getRow() <= 8 && myPosition.getColumn() <= 8 && myPosition.getColumn() >= 1 && myPosition.getRow() >= 1;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) {

@@ -73,7 +73,7 @@ public class ChessPiece {
                 return new KingMove().possibleMoves(board, myPosition);
             }
         }
-        throw new RuntimeException();
+        return null;
     }
 
     @Override
@@ -88,5 +88,10 @@ public class ChessPiece {
     @Override
     public int hashCode() {
         return Objects.hash(color, typeOfPiece);
+    }
+
+    @Override
+    public String toString() {
+        return "ChessPiece = " + color + " " + typeOfPiece;
     }
 }
