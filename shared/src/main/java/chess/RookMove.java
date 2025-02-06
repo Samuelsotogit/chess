@@ -37,7 +37,7 @@ public class RookMove implements PieceMoveCalculator{
                     if (nextPiece == null) {
                         moves.add(new ChessMove(position, nextPosition, null));
                     }
-                    //As soon as there is a piece in the next column, that rook can be moved to that position as a valid move (taking).
+                    //As soon as there is an enemy piece in the next column, that rook can be moved to that position as a valid move (taking).
                     else if (nextPiece.getTeamColor() != rook.getTeamColor()) {
                         moves.add(new ChessMove(position, nextPosition, null));
                         //Stop adding moves if capturing a piece.

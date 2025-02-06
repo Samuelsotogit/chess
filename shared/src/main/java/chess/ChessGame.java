@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -10,15 +11,20 @@ import java.util.Collection;
  */
 public class ChessGame {
 
-    public ChessGame() {
+    private TeamColor teamTurn;
+    private ChessBoard board;
+    private ChessPosition position;
+    private ChessPiece piece;
 
+    public ChessGame() {
+        this.board = new ChessBoard();
     }
 
     /**
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        throw new RuntimeException("Not implemented");
+        return this.teamTurn;
     }
 
     /**
@@ -27,7 +33,7 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        throw new RuntimeException("Not implemented");
+        this.teamTurn = team;
     }
 
     /**
@@ -46,7 +52,8 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        ChessPiece piece = new ChessPiece(board.getPiece(startPosition).getTeamColor(), board.getPiece(startPosition).getPieceType());
+        return piece.pieceMoves(board, startPosition);
     }
 
     /**
@@ -55,8 +62,28 @@ public class ChessGame {
      * @param move chess move to preform
      * @throws InvalidMoveException if move is invalid
      */
-    public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+
+    /* When is it invalid to make a move?
+    * -After the game is over: There is a checkmate one either team, there is a stalemate on either team.
+    * -When the king's next move is also a possible move of an attacking piece (Check).
+    * -When it is not your turn.
+    * */
+
+    public void makeMove(ChessMove move)
+            throws InvalidMoveException {
+        ChessPosition position = new ChessPosition(move.getStartPosition().getRow(), move.getStartPosition().getColumn());
+        ChessPiece piece = new ChessPiece(board.getPiece(position).getTeamColor(), board.getPiece(position).getPieceType());
+        TeamColor turn = getTeamTurn();
+        // Not your turn move
+        if (piece.getTeamColor() != turn) {
+            throw new InvalidMoveException();
+        } else if (isInCheckmate(piece.getTeamColor())) {
+            throw new InvalidMoveException();
+        } else if (isInStalemate(piece.getTeamColor())) {
+            throw new InvalidMoveException();
+        } else if (isInCheck(piece.getTeamColor())) {
+            throw new InvalidMoveException();
+        }
     }
 
     /**
@@ -96,7 +123,7 @@ public class ChessGame {
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) {
-        throw new RuntimeException("Not implemented");
+        board.setUpBoard();
     }
 
     /**
@@ -105,6 +132,6 @@ public class ChessGame {
      * @return the chessboard
      */
     public ChessBoard getBoard() {
-        throw new RuntimeException("Not implemented");
+        return board;
     }
 }

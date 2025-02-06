@@ -17,7 +17,7 @@ public class ChessBoard {
         board = new ChessPiece[8][8];
     }
 
-        private void setUpBoard() {
+        public void setUpBoard() {
 
             //Initialize white Pieces.
             ChessPiece whitePawn = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
@@ -110,11 +110,10 @@ public class ChessBoard {
     }
 
     /**
-     *
      * @param myPosition the position my piece is in.
      * @return true if my position is within bounds, else false.
      */
-    public boolean isInbounds(ChessPosition myPosition) {
+    public boolean isInBounds(ChessPosition myPosition) {
         return myPosition.getRow() <= 8 && myPosition.getColumn() <= 8 && myPosition.getColumn() >= 1 && myPosition.getRow() >= 1;
     }
 
