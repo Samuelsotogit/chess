@@ -71,8 +71,8 @@ public class ChessGame {
 
     public void makeMove(ChessMove move)
             throws InvalidMoveException {
-        ChessPosition position = new ChessPosition(move.getStartPosition().getRow(), move.getStartPosition().getColumn());
-        ChessPiece piece = new ChessPiece(board.getPiece(position).getTeamColor(), board.getPiece(position).getPieceType());
+        ChessPosition fromPosition = new ChessPosition(move.getStartPosition().getRow(), move.getStartPosition().getColumn());
+        ChessPiece piece = new ChessPiece(board.getPiece(fromPosition).getTeamColor(), board.getPiece(fromPosition).getPieceType());
         TeamColor turn = getTeamTurn();
         // Not your turn move
         if (piece.getTeamColor() != turn) {
@@ -83,6 +83,10 @@ public class ChessGame {
             throw new InvalidMoveException();
         } else if (isInCheck(piece.getTeamColor())) {
             throw new InvalidMoveException();
+        } else {
+            ChessPosition nextPosition = new ChessPosition(move.getEndPosition().getRow(), move.getEndPosition().getColumn());
+            board.addPiece(nextPosition, piece);
+            board.removePiece(fromPosition);
         }
     }
 
