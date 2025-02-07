@@ -14,10 +14,11 @@ public class ChessGame {
     private TeamColor teamTurn;
     private ChessBoard board;
     private ChessPosition position;
-    private ChessPiece piece;
 
     public ChessGame() {
         this.board = new ChessBoard();
+        board.setUpBoard();
+        this.teamTurn = TeamColor.WHITE;
     }
 
     /**
@@ -53,25 +54,40 @@ public class ChessGame {
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         ChessPiece piece = new ChessPiece(board.getPiece(startPosition).getTeamColor(), board.getPiece(startPosition).getPieceType());
-        return piece.pieceMoves(board, startPosition);
+        if (piece.getPieceType() == null) {
+            return null;
+        }
+        Collection<ChessMove> possibleMoves = piece.pieceMoves(board, startPosition);
+        Collection<ChessMove> validMoves = new ArrayList<>();
+        for (ChessMove move : possibleMoves) {
+            //How can the king be placed in danger?
+            // 1. move the king into the possible moves of an enemy piece.
+            // 2. moving a friendly piece will leave the king in the possible moves of an enemy piece.
+            if (!isInCheck(teamTurn)) {
+                validMoves.add(move);
+            }
+        }
+        return validMoves;
     }
 
     /**
      * Makes a move in a chess game
      *
-     * @param move chess move to preform
+     * @param move chess move to perform
      * @throws InvalidMoveException if move is invalid
      */
 
     /* When is it invalid to make a move?
-    * -After the game is over: There is a checkmate one either team, there is a stalemate on either team.
-    * -When the king's next move is also a possible move of an attacking piece (Check).
-    * -When it is not your turn.
-    * */
-
+     * -After the game is over: There is a checkmate one either team, there is a stalemate on either team.
+     * -When the king's next move is also a possible move of an attacking piece (Check).
+     * -When it is not your turn.
+     * */
     public void makeMove(ChessMove move)
             throws InvalidMoveException {
         ChessPosition fromPosition = new ChessPosition(move.getStartPosition().getRow(), move.getStartPosition().getColumn());
+        if (board.getPiece(fromPosition) == null) {
+            throw new InvalidMoveException();
+        }
         ChessPiece piece = new ChessPiece(board.getPiece(fromPosition).getTeamColor(), board.getPiece(fromPosition).getPieceType());
         TeamColor turn = getTeamTurn();
         // Not your turn move
@@ -97,7 +113,39 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        // Get the current board
+        ChessBoard board = getBoard();
+        ChessPosition kingPosition;
+        //List of moves of all enemy pieces
+        var enemyPiecesPotentialMoves = new ArrayList<>();
+        // Iterate over entire board
+        for (int i = 1; i < 9; i++) {
+            for (int j = 1; j < 9; j++) {
+                ChessPosition position = new ChessPosition(i,j);
+                if (board.getPiece(position) == null) {
+                    continue;
+                }
+                if (board.getPiece(position).getPieceType() != null) {
+                    //Examine every piece
+                    ChessPiece piece = board.getPiece(position);
+                    // If the piece is a king, check if it is in the possible moves of an enemy piece.
+
+                    // If the piece is an enemy piece, add its possible moves to the list.
+                    if (piece.getTeamColor() != teamColor) {
+                        enemyPiecesPotentialMoves.add(piece.pieceMoves(board, position));
+                    }
+                }
+            }
+        }
+//        // Ensure King's position is not in the possible moves of an enemy piece.
+//        for (Object enemyPiecesPotentialMove : enemyPiecesPotentialMoves) {
+//            ChessMove move = (ChessMove) enemyPiecesPotentialMove;
+//            /*king's position is in the possible moves of an enemy piece, therefore check.*/
+//            if (move.getEndPosition().equals(kingPosition)) {
+//                return true;
+//            }
+//        }
+        return false;
     }
 
     /**
@@ -107,7 +155,8 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        boolean checkmate = false;
+        return false;
     }
 
     /**
@@ -118,7 +167,7 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        return false;
     }
 
     /**
@@ -127,7 +176,7 @@ public class ChessGame {
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) {
-        board.setUpBoard();
+        this.board = board;
     }
 
     /**
@@ -136,6 +185,14 @@ public class ChessGame {
      * @return the chessboard
      */
     public ChessBoard getBoard() {
-        return board;
+        return this.board;
     }
+
+//    private ChessPosition getKingPosition() {
+//        if (piece.getPieceType() == ChessPiece.PieceType.KING && piece.getTeamColor() == teamColor) {
+//            var king = piece;
+//            var kingPosition = position;
+//        }
+//    }
 }
+
