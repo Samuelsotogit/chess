@@ -95,9 +95,6 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        if (this.board[position.getRow()-1][position.getColumn()-1] == null) {
-            return null;
-        }
         return this.board[position.getRow()-1][position.getColumn()-1];
     }
 
@@ -129,5 +126,30 @@ public class ChessBoard {
     @Override
     public int hashCode() {
         return Arrays.deepHashCode(board);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 8; i >= 1; i--) {
+            for (int j = 1; j <= 8; j++) {
+                ChessPosition position = new ChessPosition(i, j);
+                ChessPiece piece = getPiece(position);
+                if (piece != null) {
+                    char pieceChar = piece.getPieceType() == ChessPiece.PieceType.KNIGHT ? 'n' : piece.getPieceType().toString().charAt(0);
+                    if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+                        pieceChar = Character.toUpperCase(pieceChar);
+                    } else {
+                        pieceChar = Character.toLowerCase(pieceChar);
+                    }
+                    sb.append(pieceChar);
+                } else {
+                    sb.append("|");
+                }
+                sb.append(" ");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 }
