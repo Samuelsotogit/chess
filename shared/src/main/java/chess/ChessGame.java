@@ -315,7 +315,6 @@ public class ChessGame {
                 if (board.getPiece(position).getPieceType() != null) {
                     //Examine every piece
                     ChessPiece piece = board.getPiece(position);
-                    // If the piece is an enemy piece, add its possible moves to the list.
                     if (piece.getTeamColor() == teamColor) {
                         friendlyMoves.addAll(piece.pieceMoves(board, position));
                     }
