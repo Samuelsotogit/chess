@@ -129,7 +129,7 @@ public class ChessBoard {
 
             while (isInBounds(nextPosition)) {
                 ChessPiece nextPiece = getPiece(nextPosition);
-                // If there are no pieces ahead, those are valid moves.
+                // No piece in the way:
                 if (nextPiece == null) {
                     moves.add(new ChessMove(position, nextPosition, null));
                     // If the piece is a knight or king, it can only move one square.
@@ -137,14 +137,13 @@ public class ChessBoard {
                         break;
                     }
                 }
-                //As soon as there is an enemy piece in the next column, that rook can be moved to that position as a valid move (taking).
+                // Capture:
                 else if (nextPiece.getTeamColor() != piece.getTeamColor()) {
                     moves.add(new ChessMove(position, nextPosition, null));
-                    //Stop adding moves if capturing a piece.
                     break;
                 }
+                // Friendly piece in the way:
                 else if (nextPiece.getTeamColor() == piece.getTeamColor()) {
-                    //Stop adding moves if blocked by a piece of the same color.
                     break;
                 }
                 //Update square being checked as possible move.

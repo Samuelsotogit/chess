@@ -1,28 +1,28 @@
 package dataaccess;
-import model.AuthData;
+import DataTransferObjects.RegisterRequest;
 import model.UserData;
 import java.util.HashMap;
-import java.util.UUID;
 
 public class UserMemoryDataAccess implements UserDAO {
     private final HashMap<String, UserData> users = new HashMap<>();
 
     @Override
     public UserData getUser(String username) throws DataAccessException {
-        if (users.containsKey(username)) {
-            return users.get(username);
-        }
-        return null;
+        return users.get(username);
     }
 
     @Override
-    public void createUser(UserData data) throws DataAccessException {
+    public void createUser(RegisterRequest data) throws DataAccessException {
         UserData newUser = new UserData(data.username(), data.password(), data.email());
         users.put(data.username(), newUser);
     }
 
     @Override
-    public void deleteUsers() {
+    public void deleteUsers() throws DataAccessException {
         users.clear();
+    }
+
+    public HashMap<String, UserData> getUsers() {
+        return users;
     }
 }

@@ -1,5 +1,6 @@
 package dataaccess;
 
+import DataTransferObjects.RegisterRequest;
 import model.AuthData;
 import model.UserData;
 import java.util.HashMap;
@@ -9,11 +10,7 @@ public class AuthMemoryDataAccess implements AuthDAO {
     private final HashMap<String, AuthData> authTokens = new HashMap<>();
 
     @Override
-    public AuthData createAuth(UserData data) throws DataAccessException {
-        if (data == null || data.username() == null) {
-            System.out.println("User not found");
-            throw new DataAccessException("User not found");
-        }
+    public AuthData createAuth(RegisterRequest data) throws DataAccessException {
         String newToken = generateToken();
         AuthData newAuthData = new AuthData(data.username(), newToken);
         authTokens.put(newToken, newAuthData);
@@ -21,23 +18,26 @@ public class AuthMemoryDataAccess implements AuthDAO {
     }
 
     @Override
-    public AuthData getAuthData(String authToken) {
-        // I am supposed to find the user by the authToken. Fix this.
+    public AuthData getAuthData(String authToken) throws DataAccessException {
         return authTokens.get(authToken);
     }
 
     @Override
-    public void deleteAuth(String authToken) {
+    public void deleteAuth(String authToken) throws DataAccessException {
         authTokens.remove(authToken);
     }
 
     @Override
-    public void clearAuth() {
+    public void clearAuth() throws DataAccessException {
         authTokens.clear();
     }
 
     @Override
     public String generateToken() {
         return UUID.randomUUID().toString();
+    }
+
+    public HashMap<String, AuthData> getAuthTokens() {
+        return authTokens;
     }
 }

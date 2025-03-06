@@ -1,6 +1,11 @@
 package service;
+import DataTransferObjects.LoginRequest;
+import DataTransferObjects.RegisterOrLoginResponse;
+import DataTransferObjects.RegisterRequest;
 import dataaccess.AuthMemoryDataAccess;
 import dataaccess.DataAccessException;
+import dataaccess.GameMemoryDataAccess;
+import server.ResponseException;
 import dataaccess.UserMemoryDataAccess;
 import model.UserData;
 import model.AuthData;
@@ -9,45 +14,68 @@ public class UserService {
 
     UserMemoryDataAccess userDAO;
     AuthMemoryDataAccess authDAO;
+    GameMemoryDataAccess gameDAO;
 
-    public UserService(UserMemoryDataAccess userDAO, AuthMemoryDataAccess authDAO) {
+    public UserService(UserMemoryDataAccess userDAO, AuthMemoryDataAccess authDAO, GameMemoryDataAccess gameDAO) {
         this.userDAO = userDAO;
         this.authDAO = authDAO;
+        this.gameDAO = gameDAO;
     }
 
-    public AuthData register(UserData request) throws DataAccessException {
+    public RegisterOrLoginResponse register(RegisterRequest request) throws ResponseException {
         // Check if user exists
-        if (userDAO.getUser(request.username()) != null) {
-            throw new DataAccessException("User already exists");
-        } else if (request.password() == null) {
-            throw new DataAccessException("Password field is empty");
+        try {
+            UserData user = userDAO.getUser(request.username());
+            if (user != null) {
+                throw new ResponseException(403, "Error: already taken");
+            }
+            userDAO.createUser(request);
+            AuthData authData = authDAO.createAuth(request);
+            return new RegisterOrLoginResponse(authData.username(), authData.authToken());
+        } catch (DataAccessException e) {
+            throw new ResponseException(500, "Error: Internal Server Error");
         }
-        userDAO.createUser(request);
-        return authDAO.createAuth(request);
     }
 
-    public AuthData login(UserData request) throws DataAccessException {
-        AuthData newAuthdata;
-        UserData userData = userDAO.getUser(request.username());
-        if (userData == null) {
-            throw new DataAccessException("User not found");
-        } else if (!userData.password().equals(request.password())) {
-            throw new DataAccessException("Incorrect password");
+    public RegisterOrLoginResponse login(LoginRequest request) throws ResponseException {
+        try {
+            AuthData newAuthdata;
+
+            UserData userData = userDAO.getUser(request.username());
+            if (userData == null) {
+                throw new ResponseException(401, "Error: unauthorized");
+            } else if (!userData.password().equals(request.password())) {
+                throw new ResponseException(401, "Error: unauthorized");
+            }
+            newAuthdata = authDAO.createAuth(new RegisterRequest(userData.username(), userData.password(), userData.email()));
+            return new RegisterOrLoginResponse(newAuthdata.username(), newAuthdata.authToken());
+        } catch (DataAccessException e) {
+            throw new ResponseException(500, "Error: Internal Server Error");
         }
-        newAuthdata = authDAO.createAuth(userData);
-        return newAuthdata;
     }
 
-    public void logout(String authToken) throws DataAccessException {
-        AuthData authData = authDAO.getAuthData(authToken);
-        if (authData == null) {
-            throw new DataAccessException("unauthorized");
+    public void logout(String authToken) throws ResponseException {
+        try {
+            AuthData authData = authDAO.getAuthData(authToken);
+            if (authData == null) {
+                throw new ResponseException(401, "Error: unauthorized");
+            }
+            authDAO.deleteAuth(authToken);
+        } catch (DataAccessException e) {
+            throw new ResponseException(500, "Error: Internal Server Error");
         }
-        authDAO.deleteAuth(authToken);
     }
 
-    public void clearDatabase() throws DataAccessException {
-        userDAO.deleteUsers();
-        authDAO.clearAuth();
+    public void clearDatabase() throws ResponseException {
+        try {
+            userDAO.deleteUsers();
+            authDAO.clearAuth();
+            gameDAO.deleteGames();
+            if (!userDAO.getUsers().isEmpty() || !authDAO.getAuthTokens().isEmpty() || !gameDAO.getGames().isEmpty()) {
+                throw new ResponseException(401, "Error: Unauthorized");
+            }
+        } catch (DataAccessException e) {
+            throw new ResponseException(500, "Error: Internal Server Error");
+        }
     }
 }

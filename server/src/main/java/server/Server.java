@@ -1,9 +1,12 @@
 package server;
 import dataaccess.AuthMemoryDataAccess;
+import dataaccess.GameMemoryDataAccess;
 import dataaccess.UserMemoryDataAccess;
 import server.handlers.DeleteHandler;
 import server.handlers.LoginHandler;
 import server.handlers.RegistrationHandler;
+import server.handlers.GamesHandler;
+import service.GameService;
 import service.UserService;
 import spark.*;
 
@@ -11,16 +14,21 @@ public class Server {
 
     UserMemoryDataAccess userDAO = new UserMemoryDataAccess();
     AuthMemoryDataAccess authDAO = new AuthMemoryDataAccess();
+    GameMemoryDataAccess gameDAO = new GameMemoryDataAccess();
     UserService userService;
+    GameService gameService;
     LoginHandler loginHandler;
     RegistrationHandler registrationHandler;
     DeleteHandler deleteHandler;
+    GamesHandler gamesHandler;
 
     public Server() {
-        this.userService = new UserService(userDAO, authDAO);
+        this.userService = new UserService(userDAO, authDAO, gameDAO);
+        this.gameService = new GameService(userDAO, authDAO, gameDAO);
         this.loginHandler = new LoginHandler(userService);
         this.registrationHandler = new RegistrationHandler(userService);
         this.deleteHandler = new DeleteHandler(userService);
+        this.gamesHandler = new GamesHandler(gameService);
     }
 
     public int run(int desiredPort) {
@@ -33,7 +41,10 @@ public class Server {
         Spark.delete("/db", deleteHandler::clearDatabase);
         Spark.post("/session", loginHandler::loginUser);
         Spark.delete("session", loginHandler::logout);
-//        Spark.get("/game", );
+        Spark.post("/game", gamesHandler::createGame);
+        Spark.put("/game", gamesHandler::joinGame);
+        Spark.get("/game", gamesHandler::listGames);
+        Spark.exception(ResponseException.class, this::exceptionHandler);
         //This line initializes the server and can be removed once you have a functioning endpoint 
         Spark.init();
 
@@ -46,4 +57,8 @@ public class Server {
         Spark.awaitStop();
     }
 
+    private void exceptionHandler(ResponseException ex, Request req, Response res) {
+        res.status(ex.StatusCode());
+        res.body(ex.toJson());
+    }
 }

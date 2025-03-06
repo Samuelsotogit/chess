@@ -1,5 +1,9 @@
 import chess.*;
+import dataaccess.UserMemoryDataAccess;
 import server.Server;
+import service.UserService;
+
+import java.util.UUID;
 
 public class Main {
     public static void main(String[] args) {
