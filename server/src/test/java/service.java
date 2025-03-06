@@ -13,7 +13,7 @@ import dataaccess.*;
 import java.util.HashMap;
 import java.util.List;
 
-public class ServiceTests {
+public class service {
 
     UserMemoryDataAccess userDAO;
     AuthMemoryDataAccess authDAO;
@@ -23,7 +23,7 @@ public class ServiceTests {
     RegisterRequest request;
     RegisterOrLoginResponse response;
 
-    public ServiceTests() throws ResponseException {
+    public service() throws ResponseException {
         this.userDAO = new UserMemoryDataAccess();
         this.authDAO = new AuthMemoryDataAccess();
         this.gameDAO = new GameMemoryDataAccess();
