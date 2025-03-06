@@ -1,3 +1,4 @@
+import DataTransferObjects.RegisterOrLoginResponse;
 import DataTransferObjects.RegisterRequest;
 import model.UserData;
 import org.junit.jupiter.api.Assertions;
@@ -31,5 +32,15 @@ public class ServiceTests {
         userService.register(new RegisterRequest("NewUser", "NewPassword", "NewEmail@random"));
         Assertions.assertEquals(usersTest.get("NewUser"), userDAO.getUser("NewUser"));
     }
+
+    @Test
+    void testBadRegister() throws ResponseException, DataAccessException {
+        userService.register(new RegisterRequest("ExistingUser", "ExistingPassword", "ExistingEmail"));
+        Exception exception = Assertions.assertThrows(ResponseException.class, () -> {
+            userService.register(new RegisterRequest("ExistingUser", "ExistingPassword", "ExistingEmail"));
+        });
+        Assertions.assertEquals("Error: already taken", exception.getMessage());
+    }
+
 
 }
