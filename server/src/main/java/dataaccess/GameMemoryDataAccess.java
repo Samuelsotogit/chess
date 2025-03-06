@@ -58,5 +58,4 @@ public class GameMemoryDataAccess implements GameDAO {
         nextID = 1;
         games.clear();
     }
-
 }

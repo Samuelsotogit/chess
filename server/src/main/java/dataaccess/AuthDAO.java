@@ -1,9 +1,7 @@
 package dataaccess;
 
-import DataTransferObjects.RegisterOrLoginResponse;
 import DataTransferObjects.RegisterRequest;
 import model.AuthData;
-import model.UserData;
 
 public interface AuthDAO {
     AuthData getAuthData(String authToken) throws DataAccessException;
