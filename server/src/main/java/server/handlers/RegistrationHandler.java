@@ -4,7 +4,6 @@ import DataTransferObjects.RegisterRequest;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import server.ResponseException;
-import model.AuthData;
 import service.UserService;
 import spark.Request;
 import spark.Response;

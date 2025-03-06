@@ -69,4 +69,5 @@ public class GameService {
             throw new ResponseException(403, "Error: Internal Server Error");
         }
     }
+
 }

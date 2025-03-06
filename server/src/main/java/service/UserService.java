@@ -40,7 +40,6 @@ public class UserService {
     public RegisterOrLoginResponse login(LoginRequest request) throws ResponseException {
         try {
             AuthData newAuthdata;
-
             UserData userData = userDAO.getUser(request.username());
             if (userData == null) {
                 throw new ResponseException(401, "Error: unauthorized");
