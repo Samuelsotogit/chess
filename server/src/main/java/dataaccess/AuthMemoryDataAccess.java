@@ -1,6 +1,6 @@
 package dataaccess;
 
-import DataTransferObjects.RegisterRequest;
+import data.transfer.objects.RegisterRequest;
 import model.AuthData;
 import java.util.HashMap;
 import java.util.UUID;

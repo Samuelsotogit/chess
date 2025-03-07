@@ -1,6 +1,6 @@
 package service;
 
-import DataTransferObjects.GamesListResponse;
+import data.transfer.objects.GamesListResponse;
 import chess.ChessGame;
 import dataaccess.AuthMemoryDataAccess;
 import dataaccess.DataAccessException;
@@ -11,7 +11,6 @@ import server.ResponseException;
 import model.GameID;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class GameService {
 

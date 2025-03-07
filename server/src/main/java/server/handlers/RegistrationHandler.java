@@ -1,6 +1,6 @@
 package server.handlers;
-import DataTransferObjects.RegisterOrLoginResponse;
-import DataTransferObjects.RegisterRequest;
+import data.transfer.objects.RegisterOrLoginResponse;
+import data.transfer.objects.RegisterRequest;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import server.ResponseException;

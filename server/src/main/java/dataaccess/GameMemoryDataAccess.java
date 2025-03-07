@@ -1,6 +1,6 @@
 package dataaccess;
 
-import DataTransferObjects.GamesListResponse;
+import data.transfer.objects.GamesListResponse;
 import chess.ChessGame;
 
 import java.util.ArrayList;

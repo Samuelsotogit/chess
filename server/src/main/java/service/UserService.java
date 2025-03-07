@@ -1,7 +1,7 @@
 package service;
-import DataTransferObjects.LoginRequest;
-import DataTransferObjects.RegisterOrLoginResponse;
-import DataTransferObjects.RegisterRequest;
+import data.transfer.objects.LoginRequest;
+import data.transfer.objects.RegisterOrLoginResponse;
+import data.transfer.objects.RegisterRequest;
 import dataaccess.AuthMemoryDataAccess;
 import dataaccess.DataAccessException;
 import dataaccess.GameMemoryDataAccess;

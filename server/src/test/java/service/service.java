@@ -1,14 +1,15 @@
-import DataTransferObjects.GamesListResponse;
-import DataTransferObjects.LoginRequest;
-import DataTransferObjects.RegisterOrLoginResponse;
-import DataTransferObjects.RegisterRequest;
+package service;
+
+import data.transfer.objects.GamesListResponse;
+import data.transfer.objects.LoginRequest;
+import data.transfer.objects.RegisterOrLoginResponse;
+import data.transfer.objects.RegisterRequest;
 import chess.ChessGame;
 import model.GameID;
 import model.UserData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import server.ResponseException;
-import service.*;
 import dataaccess.*;
 import java.util.HashMap;
 import java.util.List;
@@ -32,8 +33,6 @@ public class service {
         this.request = new RegisterRequest("ExistingUser", "ExistingPassword", "ExistingEmail");
         this.response = userService.register(request);
     }
-
-
 
     @Test
     void testGoodRegister() throws ResponseException, DataAccessException {

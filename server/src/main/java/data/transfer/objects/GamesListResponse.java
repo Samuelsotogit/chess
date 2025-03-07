@@ -1,4 +1,4 @@
-package DataTransferObjects;
+package data.transfer.objects;
 
 import java.util.Objects;
 

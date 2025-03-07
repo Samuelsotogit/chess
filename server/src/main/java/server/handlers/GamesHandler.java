@@ -1,7 +1,7 @@
 package server.handlers;
 
-import DataTransferObjects.GamesListResponse;
-import DataTransferObjects.JoinGameRequest;
+import data.transfer.objects.GamesListResponse;
+import data.transfer.objects.JoinGameRequest;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import server.ResponseException;

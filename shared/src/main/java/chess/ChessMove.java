@@ -11,13 +11,13 @@ import java.util.Objects;
 public class ChessMove {
     private ChessPosition fromPosition;
     private ChessPosition toPosition;
-    private ChessPiece.PieceType PieceToPromoteTo;
+    private ChessPiece.PieceType pieceToPromoteTo;
 
     public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
                      ChessPiece.PieceType promotionPiece) {
         this.fromPosition = startPosition;
         this.toPosition = endPosition;
-        this.PieceToPromoteTo = promotionPiece;
+        this.pieceToPromoteTo = promotionPiece;
     }
 
     /**
@@ -41,10 +41,10 @@ public class ChessMove {
      * @return Type of piece to promote a pawn to, or null if no promotion
      */
     public ChessPiece.PieceType getPromotionPiece() {
-        if (this.PieceToPromoteTo == null) {
+        if (this.pieceToPromoteTo == null) {
             return null;
         }
-        return this.PieceToPromoteTo;
+        return this.pieceToPromoteTo;
     }
 
     @Override
@@ -53,18 +53,18 @@ public class ChessMove {
             return false;
         }
         ChessMove chessMove = (ChessMove) o;
-        return Objects.equals(fromPosition, chessMove.fromPosition) && Objects.equals(toPosition, chessMove.toPosition) && PieceToPromoteTo == chessMove.PieceToPromoteTo;
+        return Objects.equals(fromPosition, chessMove.fromPosition) && Objects.equals(toPosition, chessMove.toPosition) && pieceToPromoteTo == chessMove.pieceToPromoteTo;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(fromPosition, toPosition, PieceToPromoteTo);
+        return Objects.hash(fromPosition, toPosition, pieceToPromoteTo);
     }
 
     @Override
     public String toString() {
         return
                 fromPosition + " -> " + toPosition +
-                " [" + PieceToPromoteTo + "]";
+                " [" + pieceToPromoteTo + "]";
     }
 }

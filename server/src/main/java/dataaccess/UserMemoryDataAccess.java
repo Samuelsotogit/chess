@@ -1,5 +1,5 @@
 package dataaccess;
-import DataTransferObjects.RegisterRequest;
+import data.transfer.objects.RegisterRequest;
 import model.UserData;
 import java.util.HashMap;
 

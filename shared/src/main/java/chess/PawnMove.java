@@ -10,7 +10,9 @@ public class PawnMove implements PieceMoveCalculator {
 
         ChessPiece piece = new ChessPiece(board.getPiece(position).getTeamColor(), board.getPiece(position).getPieceType());
 
-        if (piece.getPieceType() == ChessPiece.PieceType.PAWN) {
+        if (piece.getPieceType() != ChessPiece.PieceType.PAWN) {
+            return moves;
+        }
 
             int[][] directions = {
                     {1, 0}
@@ -85,7 +87,5 @@ public class PawnMove implements PieceMoveCalculator {
                 }
             }
             return moves;
-        }
-        return moves;
     }
 }
