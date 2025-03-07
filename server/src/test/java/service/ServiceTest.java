@@ -14,7 +14,7 @@ import dataaccess.*;
 import java.util.HashMap;
 import java.util.List;
 
-public class service {
+public class ServiceTest {
 
     UserMemoryDataAccess userDAO;
     AuthMemoryDataAccess authDAO;
@@ -24,7 +24,7 @@ public class service {
     RegisterRequest request;
     RegisterOrLoginResponse response;
 
-    public service() throws ResponseException {
+    public ServiceTest() throws ResponseException {
         this.userDAO = new UserMemoryDataAccess();
         this.authDAO = new AuthMemoryDataAccess();
         this.gameDAO = new GameMemoryDataAccess();
