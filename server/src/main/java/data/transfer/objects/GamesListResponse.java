@@ -9,7 +9,10 @@ public record GamesListResponse(Integer gameID, String whiteUsername, String bla
             return false;
         }
         GamesListResponse that = (GamesListResponse) o;
-        return Objects.equals(gameID, that.gameID) && Objects.equals(gameName, that.gameName) && Objects.equals(whiteUsername, that.whiteUsername) && Objects.equals(blackUsername, that.blackUsername);
+        return Objects.equals(gameID, that.gameID)
+                && Objects.equals(gameName, that.gameName)
+                && Objects.equals(whiteUsername, that.whiteUsername)
+                && Objects.equals(blackUsername, that.blackUsername);
     }
 
     @Override
