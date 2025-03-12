@@ -10,9 +10,12 @@ import spark.*;
 
 public class Server {
 
-    UserDAO userDAO = new UserMemoryDataAccess();
-    AuthDAO authDAO = new AuthMemoryDataAccess();
-    GameDAO gameDAO = new GameMemoryDataAccess();
+//    UserDAO userDAO = new UserMemoryDataAccess();
+//    AuthDAO authDAO = new AuthMemoryDataAccess();
+//    GameDAO gameDAO = new GameMemoryDataAccess();
+    UserDAO userDAO = new UserMySqlDataAccess();
+    AuthDAO authDAO = new AuthMySqlDataAccess();
+    GameDAO gameDAO = new GameMySqlDataAccess();
     UserService userService;
     GameService gameService;
     LoginHandler loginHandler;

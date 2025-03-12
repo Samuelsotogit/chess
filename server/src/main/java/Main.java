@@ -1,12 +1,14 @@
 import chess.*;
+import dataaccess.DataAccessException;
 import dataaccess.UserMemoryDataAccess;
+import server.ResponseException;
 import server.Server;
 import service.UserService;
 
 import java.util.UUID;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ResponseException, DataAccessException {
         var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
         System.out.println("♕ 240 Chess Server: " + piece);
         Server server = new Server();

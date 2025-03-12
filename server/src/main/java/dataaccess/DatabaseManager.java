@@ -72,7 +72,7 @@ public class DatabaseManager {
         }
     }
 
-    private void configureDatabase(String[] createStatements) throws ResponseException, DataAccessException {
+    public void configureDatabase(String[] createStatements) throws ResponseException, DataAccessException {
         DatabaseManager.createDatabase();
         try (var conn = DatabaseManager.getConnection()) {
             for (var statement : createStatements) {
@@ -80,7 +80,7 @@ public class DatabaseManager {
                     preparedStatement.executeUpdate();
                 }
             }
-        } catch (SQLException ex) {
+        } catch (SQLException | DataAccessException ex) {
             throw new ResponseException(500, String.format("Unable to configure database: %s", ex.getMessage()));
         }
     }
