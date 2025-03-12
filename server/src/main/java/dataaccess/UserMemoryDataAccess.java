@@ -22,6 +22,7 @@ public class UserMemoryDataAccess implements UserDAO {
         users.clear();
     }
 
+    @Override
     public HashMap<String, UserData> getUsers() {
         return users;
     }

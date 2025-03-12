@@ -2,10 +2,7 @@ package service;
 
 import data.transfer.objects.GamesListResponse;
 import chess.ChessGame;
-import dataaccess.AuthMemoryDataAccess;
-import dataaccess.DataAccessException;
-import dataaccess.GameMemoryDataAccess;
-import dataaccess.UserMemoryDataAccess;
+import dataaccess.*;
 import model.AuthData;
 import server.ResponseException;
 import model.GameID;
@@ -14,11 +11,11 @@ import java.util.ArrayList;
 
 public class GameService {
 
-    UserMemoryDataAccess userDAO;
-    AuthMemoryDataAccess authDAO;
-    GameMemoryDataAccess gameDAO;
+    UserDAO userDAO;
+    AuthDAO authDAO;
+    GameDAO gameDAO;
 
-    public GameService(UserMemoryDataAccess userDAO, AuthMemoryDataAccess authDAO, GameMemoryDataAccess gameDAO) {
+    public GameService(UserDAO userDAO, AuthDAO authDAO, GameDAO gameDAO) {
         this.userDAO = userDAO;
         this.authDAO = authDAO;
         this.gameDAO = gameDAO;

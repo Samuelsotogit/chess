@@ -1,7 +1,5 @@
 package server;
-import dataaccess.AuthMemoryDataAccess;
-import dataaccess.GameMemoryDataAccess;
-import dataaccess.UserMemoryDataAccess;
+import dataaccess.*;
 import server.handlers.DeleteHandler;
 import server.handlers.LoginHandler;
 import server.handlers.RegistrationHandler;
@@ -12,9 +10,9 @@ import spark.*;
 
 public class Server {
 
-    UserMemoryDataAccess userDAO = new UserMemoryDataAccess();
-    AuthMemoryDataAccess authDAO = new AuthMemoryDataAccess();
-    GameMemoryDataAccess gameDAO = new GameMemoryDataAccess();
+    UserDAO userDAO = new UserMemoryDataAccess();
+    AuthDAO authDAO = new AuthMemoryDataAccess();
+    GameDAO gameDAO = new GameMemoryDataAccess();
     UserService userService;
     GameService gameService;
     LoginHandler loginHandler;

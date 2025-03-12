@@ -36,6 +36,7 @@ public class AuthMemoryDataAccess implements AuthDAO {
         return UUID.randomUUID().toString();
     }
 
+    @Override
     public HashMap<String, AuthData> getAuthTokens() {
         return authTokens;
     }

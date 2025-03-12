@@ -2,21 +2,18 @@ package service;
 import data.transfer.objects.LoginRequest;
 import data.transfer.objects.RegisterOrLoginResponse;
 import data.transfer.objects.RegisterRequest;
-import dataaccess.AuthMemoryDataAccess;
-import dataaccess.DataAccessException;
-import dataaccess.GameMemoryDataAccess;
+import dataaccess.*;
 import server.ResponseException;
-import dataaccess.UserMemoryDataAccess;
 import model.UserData;
 import model.AuthData;
 
 public class UserService {
 
-    UserMemoryDataAccess userDAO;
-    AuthMemoryDataAccess authDAO;
-    GameMemoryDataAccess gameDAO;
+    UserDAO userDAO;
+    AuthDAO authDAO;
+    GameDAO gameDAO;
 
-    public UserService(UserMemoryDataAccess userDAO, AuthMemoryDataAccess authDAO, GameMemoryDataAccess gameDAO) {
+    public UserService(UserDAO userDAO, AuthDAO authDAO, GameDAO gameDAO) {
         this.userDAO = userDAO;
         this.authDAO = authDAO;
         this.gameDAO = gameDAO;
