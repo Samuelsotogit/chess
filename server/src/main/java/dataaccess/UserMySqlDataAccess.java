@@ -3,14 +3,16 @@ package dataaccess;
 import data.transfer.objects.RegisterRequest;
 import model.UserData;
 import server.ResponseException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class UserMySqlDataAccess implements UserDAO {
 
     DatabaseManager databaseManager = new DatabaseManager();
 
-    public UserMySqlDataAccess() {
-        try {
+    public UserMySqlDataAccess() throws DataAccessException {
             String[] createUserTable = {
                     """
             CREATE TABLE IF NOT EXISTS  users (
@@ -22,28 +24,39 @@ public class UserMySqlDataAccess implements UserDAO {
             """
             };
             databaseManager.configureDatabase(createUserTable);
-        } catch (ResponseException | DataAccessException exception) {
-            System.out.println("Data Access Error");
-        }
     }
 
     @Override
     public UserData getUser(String user) throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection()) {
+            var statement = "SELECT username FROM users WHERE username=?";
+            try (var ps = conn.prepareStatement(statement)) {
+                ps.setString(1, user);
+                try (var rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        var username = rs.getString("username");
+                        var password = rs.getString("password");
+                        var email = rs.getString("email");
+                        return new UserData(username, password, email);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
+        }
         return null;
     }
 
     @Override
     public void createUser(RegisterRequest data) throws DataAccessException {
-
+        var statement = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
+        String hashedPassword = BCrypt.hashpw(data.password(), BCrypt.gensalt());
+        databaseManager.executeUpdate(statement, data.username(), hashedPassword, data.email());
     }
 
     @Override
     public void deleteUsers() throws DataAccessException {
-
-    }
-
-    @Override
-    public HashMap<String, UserData> getUsers() {
-        return null;
+        var statement = "TRUNCATE users";
+        databaseManager.executeUpdate(statement);
     }
 }
