@@ -3,6 +3,8 @@ package dataaccess;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import model.GameData;
+import model.GameID;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -52,9 +54,9 @@ public class GameMySqlDataAccess implements GameDAO {
     }
 
     @Override
-    public int createGame(String whiteUsername, String blackUsername, String gameName, ChessGame chessGame) throws DataAccessException {
-        var statement = "INSERT INTO games (whiteUsername, blackUsername, gameName, json), VALUES(?, ?, ?, ?)";
-        return databaseManager.executeUpdate(statement, whiteUsername, blackUsername, gameName, new Gson().toJson(chessGame));
+    public int createGame(String gameName, ChessGame chessGame) throws DataAccessException {
+        var statement = "INSERT INTO games (gameName, json) VALUES (?, ?)";
+        return databaseManager.executeUpdate(statement, gameName, new Gson().toJson(chessGame));
     }
 
     @Override
@@ -82,7 +84,7 @@ public class GameMySqlDataAccess implements GameDAO {
     @Override
     public void updateGame(Integer gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game) throws DataAccessException {
         var statement = "UPDATE games SET whiteUsername=?, blackUsername=?, gameName=?, json=? WHERE gameID=?";
-        databaseManager.executeUpdate(statement, whiteUsername, blackUsername, gameName, new Gson().toJson(game));
+        databaseManager.executeUpdate(statement, whiteUsername, blackUsername, gameName, new Gson().toJson(game), gameID);
     }
 
     @Override

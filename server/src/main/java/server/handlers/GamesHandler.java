@@ -54,6 +54,6 @@ public class GamesHandler {
         JoinGameRequest gameRequest = new Gson().fromJson(request.body(), JoinGameRequest.class);
         service.joinGame(authToken, gameRequest.playerColor(), gameRequest.gameID());
         response.status(200);
-        return "";
+        return "{}";
     }
 }

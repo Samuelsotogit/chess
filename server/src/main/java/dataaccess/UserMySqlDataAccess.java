@@ -5,7 +5,6 @@ import model.UserData;
 import server.ResponseException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class UserMySqlDataAccess implements UserDAO {
@@ -29,15 +28,15 @@ public class UserMySqlDataAccess implements UserDAO {
     @Override
     public UserData getUser(String user) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
-            var statement = "SELECT username FROM users WHERE username=?";
+            var statement = "SELECT username, password, email FROM users WHERE username=?";
             try (var ps = conn.prepareStatement(statement)) {
                 ps.setString(1, user);
                 try (var rs = ps.executeQuery()) {
                     if (rs.next()) {
                         var username = rs.getString("username");
-                        var password = rs.getString("password");
+                        var hashedPassword = rs.getString("password");
                         var email = rs.getString("email");
-                        return new UserData(username, password, email);
+                        return new UserData(username, hashedPassword, email);
                     }
                 }
             }

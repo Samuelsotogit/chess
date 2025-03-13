@@ -46,6 +46,7 @@ public class UserService {
             newAuthdata = authDAO.createAuth(new RegisterRequest(userData.username(), userData.password(), userData.email()));
             return new RegisterOrLoginResponse(newAuthdata.username(), newAuthdata.authToken());
         } catch (DataAccessException e) {
+            System.out.println(e.getMessage());
             throw new ResponseException(500, "Error: Internal Server Error");
         }
     }

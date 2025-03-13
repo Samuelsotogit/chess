@@ -9,7 +9,6 @@ import server.ResponseException;
 import model.GameID;
 
 import java.util.Collection;
-import java.util.HashMap;
 
 public class GameService {
 
@@ -42,7 +41,7 @@ public class GameService {
             if (authDAO.getAuthData(gameRequest.authToken()) == null) {
                 throw new ResponseException(401, "Error: unauthorized");
             }
-            return new GameID(gameDAO.createGame(null, null, gameRequest.gameName(), new ChessGame()));
+            return new GameID(gameDAO.createGame(gameRequest.gameName(), new ChessGame()));
         } catch (DataAccessException e) {
             throw new ResponseException(500, "Error: Internal Server Error");
         }
