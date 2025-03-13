@@ -42,7 +42,7 @@ public class ServiceTest {
         HashMap<String, UserData> usersTest = new HashMap<>();
         usersTest.put("NewUser", new UserData("NewUser", "NewPassword", "NewEmail@random"));
         userService.register(new RegisterRequest("NewUser", "NewPassword", "NewEmail@random"));
-        Assertions.assertEquals(usersTest.get("NewUser"), userDAO.getUser("NewUser"));
+        Assertions.assertEquals(usersTest.get("NewUser"), userDAO.getUser("NewUser", "NewPassword"));
     }
 
     @Test
@@ -89,7 +89,7 @@ public class ServiceTest {
     void testClearDatabase() throws ResponseException, DataAccessException {
         gameService.createGame(new GameRequest("NewGame", response.authToken()));
         userService.clearDatabase();
-        Assertions.assertNull(userDAO.getUser("ExistingUser"));
+        Assertions.assertNull(userDAO.getUser("ExistingUser", request.password()));
         Assertions.assertNull(authDAO.getAuthData(response.authToken()));
         Assertions.assertNull(gameDAO.getGame(1));
     }

@@ -22,7 +22,7 @@ public class UserService {
     public RegisterOrLoginResponse register(RegisterRequest request) throws ResponseException {
         // Check if user exists
         try {
-            UserData user = userDAO.getUser(request.username());
+            UserData user = userDAO.getUser(request.username(), request.password());
             if (user != null) {
                 throw new ResponseException(403, "Error: already taken");
             }
@@ -37,7 +37,7 @@ public class UserService {
     public RegisterOrLoginResponse login(LoginRequest request) throws ResponseException {
         try {
             AuthData newAuthdata;
-            UserData userData = userDAO.getUser(request.username());
+            UserData userData = userDAO.getUser(request.username(), request.password());
             if (userData == null) {
                 throw new ResponseException(401, "Error: unauthorized");
             } else if (!userData.password().equals(request.password())) {

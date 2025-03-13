@@ -54,8 +54,11 @@ public class GameService {
                 throw new ResponseException(401, "Error: unauthorized");
             }
             String username = authDAO.getAuthData(authToken).username();
+            if (gameID == null || playerColor == null) {
+                throw new ResponseException(400, "Error: bad request");
+            }
             GameData game = gameDAO.getGame(gameID);
-            if (game == null || playerColor == null) {
+            if (game == null) {
                 throw new ResponseException(400, "Error: bad request");
             }
             if (playerColor.equals(ChessGame.TeamColor.WHITE) && game.whiteUsername() != null || playerColor.equals(ChessGame.TeamColor.BLACK) && game.blackUsername() != null) {

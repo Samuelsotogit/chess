@@ -26,7 +26,7 @@ public class UserMySqlDataAccess implements UserDAO {
     }
 
     @Override
-    public UserData getUser(String user) throws DataAccessException {
+    public UserData getUser(String user, String password) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
             var statement = "SELECT username, password, email FROM users WHERE username=?";
             try (var ps = conn.prepareStatement(statement)) {
@@ -36,7 +36,9 @@ public class UserMySqlDataAccess implements UserDAO {
                         var username = rs.getString("username");
                         var hashedPassword = rs.getString("password");
                         var email = rs.getString("email");
-                        return new UserData(username, hashedPassword, email);
+                        if (BCrypt.checkpw(password, hashedPassword)) {
+                            return new UserData(username, password, email);
+                        }
                     }
                 }
             }

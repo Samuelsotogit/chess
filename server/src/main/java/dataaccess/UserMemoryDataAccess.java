@@ -7,7 +7,7 @@ public class UserMemoryDataAccess implements UserDAO {
     private final HashMap<String, UserData> users = new HashMap<>();
 
     @Override
-    public UserData getUser(String username) throws DataAccessException {
+    public UserData getUser(String username, String password) throws DataAccessException {
         return users.get(username);
     }
 
