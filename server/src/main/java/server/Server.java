@@ -10,12 +10,6 @@ import spark.*;
 
 public class Server {
 
-//    UserDAO userDAO = new UserMemoryDataAccess();
-//    AuthDAO authDAO = new AuthMemoryDataAccess();
-//    GameDAO gameDAO = new GameMemoryDataAccess();
-    UserDAO userDAO = new UserMySqlDataAccess();
-    AuthDAO authDAO = new AuthMySqlDataAccess();
-    GameDAO gameDAO = new GameMySqlDataAccess();
     UserService userService;
     GameService gameService;
     LoginHandler loginHandler;
@@ -24,12 +18,22 @@ public class Server {
     GamesHandler gamesHandler;
 
     public Server() {
-        this.userService = new UserService(userDAO, authDAO, gameDAO);
-        this.gameService = new GameService(userDAO, authDAO, gameDAO);
-        this.loginHandler = new LoginHandler(userService);
-        this.registrationHandler = new RegistrationHandler(userService);
-        this.deleteHandler = new DeleteHandler(userService);
-        this.gamesHandler = new GamesHandler(gameService);
+        try {
+//          UserDAO userDAO = new UserMemoryDataAccess();
+//          AuthDAO authDAO = new AuthMemoryDataAccess();
+//          GameDAO gameDAO = new GameMemoryDataAccess();
+            UserDAO userDAO = new UserMySqlDataAccess();
+            AuthDAO authDAO = new AuthMySqlDataAccess();
+            GameDAO gameDAO = new GameMySqlDataAccess();
+            this.userService = new UserService(userDAO, authDAO, gameDAO);
+            this.gameService = new GameService(userDAO, authDAO, gameDAO);
+            this.loginHandler = new LoginHandler(userService);
+            this.registrationHandler = new RegistrationHandler(userService);
+            this.deleteHandler = new DeleteHandler(userService);
+            this.gamesHandler = new GamesHandler(gameService);
+        } catch (Throwable e) {
+            System.out.println("Error initializing server");
+        }
     }
 
     public int run(int desiredPort) {

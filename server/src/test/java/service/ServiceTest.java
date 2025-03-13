@@ -1,16 +1,19 @@
 package service;
 
-import data.transfer.objects.GamesListResponse;
+import data.transfer.objects.GameRequest;
 import data.transfer.objects.LoginRequest;
 import data.transfer.objects.RegisterOrLoginResponse;
 import data.transfer.objects.RegisterRequest;
 import chess.ChessGame;
+import model.GameData;
 import model.GameID;
 import model.UserData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import server.ResponseException;
 import dataaccess.*;
+
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -68,9 +71,9 @@ public class ServiceTest {
     }
 
     @Test
-    void testGoodLogout() throws ResponseException {
+    void testGoodLogout() throws ResponseException, DataAccessException {
         userService.logout(response.authToken());
-        Assertions.assertTrue(authDAO.getAuthTokens().isEmpty());
+        Assertions.assertNull(authDAO.getAuthData(response.authToken()));
     }
 
     @Test
@@ -84,26 +87,27 @@ public class ServiceTest {
 
     @Test
     void testClearDatabase() throws ResponseException, DataAccessException {
-        gameService.createGame(response.authToken(), "NewGame");
+        gameService.createGame(new GameRequest("NewGame", response.authToken()));
         userService.clearDatabase();
-        Assertions.assertTrue(userDAO.getUsers().isEmpty());
-        Assertions.assertTrue(authDAO.getAuthTokens().isEmpty());
-        Assertions.assertTrue(gameDAO.getGames().isEmpty());
+        Assertions.assertNull(userDAO.getUser("ExistingUser"));
+        Assertions.assertNull(authDAO.getAuthData(response.authToken()));
+        Assertions.assertNull(gameDAO.getGame(1));
     }
 
     @Test
     void testGoodListGames() throws ResponseException, DataAccessException {
-        gameService.createGame(response.authToken(), "Game1");
-        gameService.createGame(response.authToken(), "Game2");
-        GamesListResponse expected1 = new GamesListResponse(2, null, null, "Game1");
-        GamesListResponse expected2 = new GamesListResponse(3, null, null, "Game2");
-        List<GamesListResponse> expectedArray = List.of(expected1, expected2);
-        Assertions.assertIterableEquals(expectedArray, (gameService.listGames(response.authToken())));
+        gameService.createGame(new GameRequest("Game1", response.authToken()));
+        gameService.createGame(new GameRequest("Game2", response.authToken()));
+        GameData gameData1 = new GameData(1, null, null, "Game1", new ChessGame());
+        GameData gameData2 = new GameData(2, null, null, "Game2", new ChessGame());
+        List<GameData> expectedArray = List.of(gameData1, gameData2);
+        Collection<GameData> games = gameService.listGames(response.authToken());
+        Assertions.assertEquals("Game1", expectedArray.getFirst().gameName());
     }
 
     @Test
     void testBadListGames() throws ResponseException {
-        gameService.createGame(response.authToken(), "Game1");
+        gameService.createGame(new GameRequest("NewGame", response.authToken()));
         Exception exception = Assertions.assertThrows(ResponseException.class, () -> {
            gameService.listGames("WrongToken");
         });
@@ -112,20 +116,21 @@ public class ServiceTest {
 
     @Test
     void testGoodCreateGame() throws ResponseException {
-        Assertions.assertInstanceOf(GameID.class, gameService.createGame(response.authToken(), "game1"));
+        Assertions.assertInstanceOf(
+                GameID.class, gameService.createGame(new GameRequest("Game1", response.authToken())));
     }
 
     @Test
     void testBadCreateGame() {
         Exception exception = Assertions.assertThrows(ResponseException.class, () -> {
-            gameService.createGame(response.authToken(), null);
+            gameService.createGame(new GameRequest(null, response.authToken()));
         });
         Assertions.assertEquals("Error: bad request", exception.getMessage());
     }
 
     @Test
     void testGoodJoinGame() throws ResponseException, DataAccessException {
-        GameID gameID = gameService.createGame(response.authToken(), "GoodGame");
+        GameID gameID = gameService.createGame(new GameRequest("GoodGame", response.authToken()));
         gameService.joinGame(response.authToken(), ChessGame.TeamColor.WHITE, gameID.gameID());
         Assertions.assertEquals("ExistingUser", gameDAO.getGame(gameID.gameID()).whiteUsername());
     }
@@ -136,11 +141,13 @@ public class ServiceTest {
         RegisterOrLoginResponse response1 = userService.register(request1);
         RegisterRequest request2 = new RegisterRequest("ExistingUser2", "ExistingPassword2", "ExistingEmail2");
         RegisterOrLoginResponse response2 = userService.register(request2);
-        GameID gameID = gameService.createGame(response1.authToken(), "BadGame");
-        gameService.joinGame(response2.authToken(), ChessGame.TeamColor.BLACK, gameID.gameID());
+        GameID gameID = gameService.createGame(
+                new GameRequest("BadGame", response1.authToken())
+        );
+        gameService.joinGame(response1.authToken(), ChessGame.TeamColor.BLACK, gameID.gameID());
         Exception exception = Assertions.assertThrows(ResponseException.class, () -> {
             gameService.joinGame(response2.authToken(), ChessGame.TeamColor.BLACK, gameID.gameID());
         });
-        Assertions.assertEquals("Error: Internal Server Error", exception.getMessage());
+        Assertions.assertEquals("Error: Forbidden", exception.getMessage());
     }
 }

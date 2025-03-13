@@ -1,6 +1,7 @@
 package server.handlers;
 
-import data.transfer.objects.GamesListResponse;
+import chess.ChessGame;
+import data.transfer.objects.GameRequest;
 import data.transfer.objects.JoinGameRequest;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -13,6 +14,8 @@ import spark.Request;
 import spark.Response;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 
 public class GamesHandler {
 
@@ -24,7 +27,7 @@ public class GamesHandler {
 
     public Object listGames(Request request, Response response) throws ResponseException {
         String authToken = request.headers("authorization");
-        ArrayList<GamesListResponse> games;
+        Collection<GameData> games;
         JsonObject jsonObject = new JsonObject();
         try {
             games = service.listGames(authToken);
@@ -40,8 +43,8 @@ public class GamesHandler {
     public Object createGame(Request request, Response response) throws ResponseException {
         String authToken = request.headers("authorization");
         String gameName = new Gson().fromJson(request.body(), GameData.class).gameName();
-        GameID gameId;
-        gameId = service.createGame(authToken, gameName);
+        GameRequest gameRequest = new GameRequest(gameName, authToken);
+        GameID gameId = service.createGame(gameRequest);
         response.status(200);
         return new Gson().toJson(gameId);
     }

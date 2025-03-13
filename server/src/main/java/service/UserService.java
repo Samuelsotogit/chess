@@ -67,9 +67,6 @@ public class UserService {
             userDAO.deleteUsers();
             authDAO.clearAuth();
             gameDAO.deleteGames();
-            if (!userDAO.getUsers().isEmpty() || !authDAO.getAuthTokens().isEmpty() || !gameDAO.getGames().isEmpty()) {
-                throw new ResponseException(401, "Error: Unauthorized");
-            }
         } catch (DataAccessException e) {
             throw new ResponseException(500, "Error: Internal Server Error");
         }
