@@ -1,13 +1,13 @@
 package dataaccess;
 
-import data.transfer.objects.GamesListResponse;
 import chess.ChessGame;
+import model.GameData;
 
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.Collection;
+import java.util.HashMap;
 
 public class GameMemoryDataAccess implements GameDAO {
-    ArrayList<GamesListResponse> games = new ArrayList<>();
+    HashMap<Integer, GameData> games = new HashMap<>();
     int nextID;
 
     public GameMemoryDataAccess() {
@@ -15,47 +15,29 @@ public class GameMemoryDataAccess implements GameDAO {
     }
 
     @Override
-    public int createGame(String gameName, Integer gameID) throws DataAccessException {
-        GamesListResponse game = new GamesListResponse(gameID+nextID++, null, null, gameName);
-        games.add(game);
+    public int createGame(String whiteUsername, String blackUsername, String gameName, ChessGame chessGame) throws DataAccessException {
+        GameData game = new GameData(nextID, null, null, gameName, chessGame);
+        games.put(nextID++ ,game);
         return game.gameID();
     }
 
     @Override
-    public GamesListResponse getGame(Integer gameID) throws DataAccessException {
-        for (GamesListResponse game : games) {
-            if (Objects.equals(game.gameID(), gameID)) {
-                return game;
-            }
-        }
-        return null;
+    public GameData getGame(Integer gameID) throws DataAccessException {
+        return games.get(gameID);
     }
 
     @Override
-    public ArrayList<GamesListResponse> getGames() throws DataAccessException {
-        return games;
+    public Collection<GameData> getGames() throws DataAccessException {
+        return games.values();
     }
 
     @Override
-    public void updateGame(Integer gameID, GamesListResponse game, ChessGame.TeamColor playerColor, String username) throws DataAccessException {
-
-        if (game.whiteUsername() == null && playerColor.equals(ChessGame.TeamColor.WHITE)) {
-            GamesListResponse newGame = new GamesListResponse(gameID, username, game.blackUsername(), game.gameName());
-            games.remove(getGame(gameID));
-            games.add(newGame);
-        } else if (game.blackUsername() == null && playerColor.equals(ChessGame.TeamColor.BLACK)) {
-            GamesListResponse newGame = new GamesListResponse(gameID, game.whiteUsername(), username, game.gameName());
-            games.remove(getGame(gameID));
-            games.add(newGame);
-        } else if (game.whiteUsername() != null && playerColor.equals(ChessGame.TeamColor.WHITE)) {
-            throw new DataAccessException("color already taken");
-        } else if (game.blackUsername() != null && playerColor.equals(ChessGame.TeamColor.BLACK)) {
-            throw new DataAccessException("color already taken");
-        }
+    public void updateGame(Integer gameID, String whiteUsername, String blackUsername, String gameName, ChessGame chessGame) throws DataAccessException {
+        GameData game = new GameData(gameID, whiteUsername, blackUsername, gameName, chessGame);
+        games.put(gameID ,game);
     }
 
     public void deleteGames() throws DataAccessException {
-        nextID = 1;
         games.clear();
     }
 }

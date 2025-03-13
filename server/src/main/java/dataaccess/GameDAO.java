@@ -1,14 +1,17 @@
 package dataaccess;
 
-import data.transfer.objects.GamesListResponse;
 import chess.ChessGame;
+import data.transfer.objects.GameRequest;
+import model.GameData;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 
 public interface GameDAO {
-    ArrayList<GamesListResponse> getGames() throws DataAccessException;
-    int createGame(String gameName, Integer gameID) throws DataAccessException;
-    GamesListResponse getGame(Integer gameID) throws DataAccessException;
-    void updateGame(Integer gameID, GamesListResponse game, ChessGame.TeamColor playerColor, String username) throws DataAccessException;
+    Collection<GameData> getGames() throws DataAccessException;
+    int createGame(String whiteUsername, String blackUsername, String gameName, ChessGame chessGame) throws DataAccessException;
+    GameData getGame(Integer gameID) throws DataAccessException;
+    void updateGame(Integer gameID, String whiteUsername, String blackUsername, String gameName, ChessGame chessGame) throws DataAccessException;
     void deleteGames() throws DataAccessException;
 }

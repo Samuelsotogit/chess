@@ -1,13 +1,15 @@
 package service;
 
-import data.transfer.objects.GamesListResponse;
 import chess.ChessGame;
+import data.transfer.objects.GameRequest;
 import dataaccess.*;
 import model.AuthData;
+import model.GameData;
 import server.ResponseException;
 import model.GameID;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 
 public class GameService {
 
@@ -21,7 +23,7 @@ public class GameService {
         this.gameDAO = gameDAO;
     }
 
-    public ArrayList<GamesListResponse> listGames(String authToken) throws ResponseException {
+    public Collection<GameData> listGames(String authToken) throws ResponseException {
         try {
             if (authToken == null || authDAO.getAuthData(authToken) == null) {
                 throw new ResponseException(401, "Error: unauthorized");
@@ -32,15 +34,15 @@ public class GameService {
         }
     }
 
-    public GameID createGame(String authToken, String gameName) throws ResponseException {
+    public GameID createGame(GameRequest gameRequest) throws ResponseException {
         try {
-            if (gameName == null) {
+            if (gameRequest.gameName() == null) {
                 throw new ResponseException(400, "Error: bad request");
             }
-            if (authDAO.getAuthData(authToken) == null) {
+            if (authDAO.getAuthData(gameRequest.authToken()) == null) {
                 throw new ResponseException(401, "Error: unauthorized");
             }
-            return new GameID(gameDAO.createGame(gameName, 1));
+            return new GameID(gameDAO.createGame(null, null, gameRequest.gameName(), new ChessGame()));
         } catch (DataAccessException e) {
             throw new ResponseException(500, "Error: Internal Server Error");
         }
@@ -53,17 +55,20 @@ public class GameService {
                 throw new ResponseException(401, "Error: unauthorized");
             }
             String username = authDAO.getAuthData(authToken).username();
-            GamesListResponse game = gameDAO.getGame(gameID);
+            GameData game = gameDAO.getGame(gameID);
             if (game == null || playerColor == null) {
                 throw new ResponseException(400, "Error: bad request");
             }
-            if (game.whiteUsername() != null && game.blackUsername() != null) {
-                throw new ResponseException(403, "Error: already taken");
+            if (playerColor.equals(ChessGame.TeamColor.WHITE) && game.whiteUsername() != null || playerColor.equals(ChessGame.TeamColor.BLACK) && game.blackUsername() != null) {
+                throw new ResponseException(403, "Error: Forbidden");
             }
-            gameDAO.updateGame(gameID, game, playerColor, username);
+            gameDAO.updateGame(gameID,
+                    playerColor.equals(ChessGame.TeamColor.WHITE) ? username : game.whiteUsername(),
+                    playerColor.equals(ChessGame.TeamColor.BLACK) ? username : game.blackUsername(),
+                    game.gameName(),
+                    game.game());
         } catch (DataAccessException e) {
             throw new ResponseException(403, "Error: Internal Server Error");
         }
     }
-
 }
