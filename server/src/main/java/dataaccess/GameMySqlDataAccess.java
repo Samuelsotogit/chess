@@ -3,7 +3,6 @@ package dataaccess;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import model.GameData;
-import model.GameID;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -72,6 +71,8 @@ public class GameMySqlDataAccess implements GameDAO {
                         String gameName = rs.getString("gameName");
                         ChessGame chessGame = new Gson().fromJson(rs.getString("json"), ChessGame.class);
                         return new GameData(gameID, whiteUsername, blackUsername, gameName, chessGame);
+                    } else if (!rs.next()) {
+                        throw new DataAccessException("No games found");
                     }
                 }
             }
