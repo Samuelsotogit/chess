@@ -61,7 +61,10 @@ public class GameService {
             if (game == null) {
                 throw new ResponseException(400, "Error: bad request");
             }
-            if (playerColor.equals(ChessGame.TeamColor.WHITE) && game.whiteUsername() != null || playerColor.equals(ChessGame.TeamColor.BLACK) && game.blackUsername() != null) {
+            if (playerColor.equals(ChessGame.TeamColor.WHITE)
+                    && game.whiteUsername() != null
+                    || playerColor.equals(ChessGame.TeamColor.BLACK)
+                    && game.blackUsername() != null) {
                 throw new ResponseException(403, "Error: Forbidden");
             }
             gameDAO.updateGame(gameID,

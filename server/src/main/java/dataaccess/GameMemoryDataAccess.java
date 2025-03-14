@@ -32,7 +32,9 @@ public class GameMemoryDataAccess implements GameDAO {
     }
 
     @Override
-    public void updateGame(Integer gameID, String whiteUsername, String blackUsername, String gameName, ChessGame chessGame) throws DataAccessException {
+    public void updateGame(Integer gameID,
+                           String whiteUsername, String blackUsername,
+                           String gameName, ChessGame chessGame) throws DataAccessException {
         GameData game = new GameData(gameID, whiteUsername, blackUsername, gameName, chessGame);
         games.put(gameID ,game);
     }

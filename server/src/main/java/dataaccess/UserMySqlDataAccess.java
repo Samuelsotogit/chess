@@ -1,6 +1,7 @@
 package dataaccess;
 
 import data.transfer.objects.RegisterRequest;
+import model.GameData;
 import model.UserData;
 import java.sql.SQLException;
 import org.mindrot.jbcrypt.BCrypt;
@@ -35,9 +36,7 @@ public class UserMySqlDataAccess implements UserDAO {
                         var username = rs.getString("username");
                         var hashedPassword = rs.getString("password");
                         var email = rs.getString("email");
-                        if (BCrypt.checkpw(password, hashedPassword)) {
-                            return new UserData(username, password, email);
-                        }
+                        return validatePassword(username, password, email, hashedPassword);
                     }
                 }
             }
@@ -58,5 +57,11 @@ public class UserMySqlDataAccess implements UserDAO {
     public void deleteUsers() throws DataAccessException {
         var statement = "TRUNCATE users";
         databaseManager.executeUpdate(statement);
+    }
+
+    UserData validatePassword(String username, String password, String email, String hashedPassword) {
+        if (BCrypt.checkpw(password, hashedPassword)) {
+            return new UserData(username, password, email);
+        } return null;
     }
 }

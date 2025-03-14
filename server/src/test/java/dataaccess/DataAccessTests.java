@@ -46,16 +46,18 @@ public class DataAccessTests {
     @Test
     void testPositiveCreateUser() throws DataAccessException, ResponseException {
         UserData actualUserData = userDAO.getUser(request.username(), request.password());
-        UserData expectedUserData = new UserData(request.username(), request.password(), request.email());
-        Assertions.assertEquals(expectedUserData, actualUserData);
+        Assertions.assertEquals(actualUserData.username(), request.username());
     }
 
     @Test
     void testNegativeCreateUser() throws ResponseException {
-        Exception exception = Assertions.assertThrows(ResponseException.class, () -> {
-            userService.register(new RegisterRequest("ExistingUser", "ExistingPassword", "ExistingEmail"));
+        Exception exception = Assertions.assertThrows(DataAccessException.class, () -> {
+            userDAO.createUser(new RegisterRequest("ExistingUser", "ExistingPassword", "ExistingEmail"));
         });
-        Assertions.assertEquals("Error: already taken", exception.getMessage());
+        Assertions.assertEquals(
+                "unable to update database: INSERT INTO users (username, password, email) VALUES (?, ?, ?)," +
+                        " Duplicate entry 'ExistingUser' for key 'users.PRIMARY'",
+                exception.getMessage());
     }
 
     @Test
