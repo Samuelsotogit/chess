@@ -44,14 +44,14 @@ public class DataAccessTests {
     //User Tests
 
     @Test
-    void GoodCreateUser() throws DataAccessException, ResponseException {
+    void PositiveCreateUser() throws DataAccessException, ResponseException {
         UserData actualUserData = userDAO.getUser(request.username(), request.password());
         UserData expectedUserData = new UserData(request.username(), request.password(), request.email());
         Assertions.assertEquals(expectedUserData, actualUserData);
     }
 
     @Test
-    void BadCreateUser() throws ResponseException {
+    void NegativeCreateUser() throws ResponseException {
         Exception exception = Assertions.assertThrows(ResponseException.class, () -> {
             userService.register(new RegisterRequest("ExistingUser", "ExistingPassword", "ExistingEmail"));
         });
@@ -59,14 +59,14 @@ public class DataAccessTests {
     }
 
     @Test
-    void GoodGetUser() throws DataAccessException, ResponseException {
+    void PositiveGetUser() throws DataAccessException, ResponseException {
         UserData actualUserData = userDAO.getUser(request.username(), request.password());
         UserData expectedUserData = new UserData(request.username(), request.password(), request.email());
         Assertions.assertEquals(expectedUserData, actualUserData);
     }
 
     @Test
-    void BadGetUser() throws ResponseException {
+    void NegativeGetUser() throws ResponseException {
         Exception exception = Assertions.assertThrows(ResponseException.class, () -> {
             userService.login(new LoginRequest("ExistingUser", "WrongPassword"));
         });
@@ -74,7 +74,7 @@ public class DataAccessTests {
     }
 
     @Test
-    void GoodDeleteUsers() throws DataAccessException, ResponseException {
+    void PositiveDeleteUsers() throws DataAccessException, ResponseException {
         userDAO.deleteUsers();
         Assertions.assertNull(userDAO.getUser(request.username(), request.password()));
     }
@@ -82,13 +82,13 @@ public class DataAccessTests {
     //Game Tests
 
     @Test
-    void GoodCreateGame() throws DataAccessException, ResponseException {
+    void PositiveCreateGame() throws DataAccessException, ResponseException {
         GameID id = gameService.createGame(new GameRequest("NewGame", response.authToken()));
         Assertions.assertNotNull(gameDAO.getGame(id.gameID()));
     }
 
     @Test
-    void BadCreateGame() throws ResponseException {
+    void NegativeCreateGame() throws ResponseException {
         Exception exception = Assertions.assertThrows(ResponseException.class, () -> {
             gameService.createGame(new GameRequest("NewGame", "WrongToken"));
         });
@@ -96,14 +96,14 @@ public class DataAccessTests {
     }
 
     @Test
-    void GoodGetGames() throws DataAccessException, ResponseException {
+    void PositiveGetGames() throws DataAccessException, ResponseException {
         gameService.createGame(new GameRequest("NewGame", response.authToken()));
         gameService.createGame(new GameRequest("NewGame2", response.authToken()));
         Assertions.assertEquals(2, gameDAO.getGames().size());
     }
 
     @Test
-    void BadGetGames() throws DataAccessException {
+    void NegativeGetGames() throws DataAccessException {
         gameDAO.createGame("NewGame", new ChessGame());
         gameDAO.createGame("NewGame2", new ChessGame());
         gameDAO.deleteGames();
@@ -112,7 +112,7 @@ public class DataAccessTests {
     }
 
     @Test
-    void GoodGetGame() throws DataAccessException, ResponseException {
+    void PositiveGetGame() throws DataAccessException, ResponseException {
         GameID id = gameService.createGame(new GameRequest("NewGame", response.authToken()));
         GameID id2 = gameService.createGame(new GameRequest("NewGame2", response.authToken()));
         GameData gameData1 = gameDAO.getGame(id.gameID());
@@ -121,7 +121,7 @@ public class DataAccessTests {
     }
 
     @Test
-    void BadGetGame() throws DataAccessException {
+    void NegativeGetGame() throws DataAccessException {
         gameDAO.deleteGames();
         Exception exception = Assertions.assertThrows(DataAccessException.class, () -> {
             gameDAO.getGame(1);
@@ -130,7 +130,7 @@ public class DataAccessTests {
     }
 
     @Test
-    void GoodUpdateGame() throws DataAccessException, ResponseException {
+    void PositiveUpdateGame() throws DataAccessException, ResponseException {
         GameID id = gameService.createGame(new GameRequest("NewGame", response.authToken()));
         gameDAO.updateGame(id.gameID(), "White", "Black", "NewGame", new ChessGame());
         GameData gameData = gameDAO.getGame(id.gameID());
@@ -138,7 +138,7 @@ public class DataAccessTests {
     }
 
     @Test
-    void BadUpdateGame() throws DataAccessException, ResponseException {
+    void NegativeUpdateGame() throws DataAccessException, ResponseException {
         GameID id = gameService.createGame(new GameRequest("NewGame", response.authToken()));
         gameDAO.updateGame(id.gameID(), "White", "Black", "NewGame", new ChessGame());
         Exception exception = Assertions.assertThrows(ResponseException.class, () -> {
@@ -148,7 +148,7 @@ public class DataAccessTests {
     }
 
     @Test
-    void GoodDeleteGames() throws DataAccessException, ResponseException {
+    void PositiveDeleteGames() throws DataAccessException, ResponseException {
         gameService.createGame(new GameRequest("NewGame", response.authToken()));
         gameService.createGame(new GameRequest("NewGame2", response.authToken()));
         gameDAO.deleteGames();
@@ -158,39 +158,39 @@ public class DataAccessTests {
     // Auth Tests
 
     @Test
-    void GoodCreateAuth() throws DataAccessException, ResponseException {
+    void PositiveCreateAuth() throws DataAccessException, ResponseException {
         AuthData authData = authDAO.createAuth(new RegisterRequest("NewUser", "NewPassword", "NewEmail"));
         Assertions.assertNotNull(authData);
     }
 
     @Test
-    void BadCreateAuth() throws DataAccessException {
+    void NegativeCreateAuth() throws DataAccessException {
         AuthData authData = authDAO.createAuth(new RegisterRequest("NewUser", "NewPassword", "NewEmail"));
         AuthData authData2 = authDAO.createAuth(new RegisterRequest("NewUser2", "NewPassword2", "NewEmail2"));
         Assertions.assertNotSame(authData.authToken(), authData2.authToken());
     }
 
     @Test
-    void GoodGetAuthData() throws DataAccessException, ResponseException {
+    void PositiveGetAuthData() throws DataAccessException, ResponseException {
         AuthData authData = authDAO.getAuthData(response.authToken());
         Assertions.assertNotNull(authData);
     }
 
     @Test
-    void BadGetAuthData() throws DataAccessException {
+    void NegativeGetAuthData() throws DataAccessException {
         AuthData authData = authDAO.getAuthData(response.authToken());
         Assertions.assertNotNull(authData);
         Assertions.assertNull(authDAO.getAuthData("WrongToken"));
     }
 
     @Test
-    void GoodDeleteAuth() throws DataAccessException, ResponseException {
+    void PositiveDeleteAuth() throws DataAccessException, ResponseException {
         authDAO.deleteAuth(response.authToken());
         Assertions.assertNull(authDAO.getAuthData(response.authToken()));
     }
 
     @Test
-    void GoodClearAuth() throws DataAccessException, ResponseException {
+    void PositiveClearAuth() throws DataAccessException, ResponseException {
         authDAO.clearAuth();
         Assertions.assertNull(authDAO.getAuthData(response.authToken()));
     }
