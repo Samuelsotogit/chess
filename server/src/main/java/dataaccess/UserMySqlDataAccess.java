@@ -2,10 +2,9 @@ package dataaccess;
 
 import data.transfer.objects.RegisterRequest;
 import model.UserData;
-import server.ResponseException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.mindrot.jbcrypt.BCrypt;
+import server.ResponseException;
 
 public class UserMySqlDataAccess implements UserDAO {
 
