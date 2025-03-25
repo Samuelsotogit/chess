@@ -22,3 +22,27 @@
 
     Each module or component should have a single responsibility and should not be overloaded with multiple responsibilities.
     This helps in maintaining the modularity and maintainability of the system.
+
+# Computer Security 3/17/25
+
+## Cryptographic Hash Functions
+
+    A cryptographic hash function is a mathematical algorithm that takes an input (or 'message') and returns a fixed-size string of bytes. The output is typically a 'digest' that is unique to each unique input.
+
+    Hash functions are commonly used in computer security for tasks such as digital signatures and password hashing. They are designed to be fast and efficient, while also being resistant to attacks such as collisions and pre-image attacks.
+
+    Some common cryptographic hash functions include MD5, SHA-1, and SHA-256. These functions are widely used in various security applications, including SSL/TLS, PGP, and IPsec.
+
+    Cryptographic hash functions are an essential tool in modern computer security, and they play a crucial role in protecting sensitive data and ensuring the integrity of digital communications.
+
+## Encryption / Decryption
+
+    Plaint text: The original message or data that is to be encrypted.
+    Cipher text: The encrypted message or data that is produced by the encryption algorithm.
+    Key: A secret value that is used by the encryption algorithm to encrypt and decrypt the message.
+    Key Size: The length of the key, which determines the strength of the encryption algorithm.
+
+### Encryption Algorithms:
+
+    Symmetric Key Encryption: Uses a single key for both encryption and decryption. Examples include DES, AES, and Blowfish.
+    Asymmetric Key Encryption: Uses a pair of keys (public and private) for encryption and decryption. Examples include RSA, DSA, and ECC.
