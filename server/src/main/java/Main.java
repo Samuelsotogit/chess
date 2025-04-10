@@ -1,11 +1,7 @@
 import chess.*;
 import dataaccess.DataAccessException;
-import dataaccess.UserMemoryDataAccess;
-import server.ResponseException;
+import shared.ResponseException;
 import server.Server;
-import service.UserService;
-
-import java.util.UUID;
 
 public class Main {
     public static void main(String[] args) throws ResponseException, DataAccessException {

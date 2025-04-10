@@ -2,11 +2,8 @@ package dataaccess;
 
 import data.transfer.objects.RegisterRequest;
 import model.AuthData;
-import model.UserData;
-import server.ResponseException;
 
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.UUID;
 
 public class AuthMySqlDataAccess implements AuthDAO {

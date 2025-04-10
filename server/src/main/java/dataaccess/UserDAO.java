@@ -2,7 +2,7 @@ package dataaccess;
 
 import data.transfer.objects.RegisterRequest;
 import model.UserData;
-import server.ResponseException;
+import shared.ResponseException;
 
 public interface UserDAO {
     UserData getUser(String user, String password) throws DataAccessException, ResponseException;

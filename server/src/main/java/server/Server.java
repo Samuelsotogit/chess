@@ -7,6 +7,7 @@ import server.handlers.GamesHandler;
 import service.GameService;
 import service.UserService;
 import spark.*;
+import shared.ResponseException;
 
 public class Server {
 

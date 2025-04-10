@@ -2,11 +2,13 @@ package server;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
+import com.sun.net.httpserver.Request;
 import model.AuthData;
 import data.transfer.objects.*;
 import java.io.*;
 import java.net.*;
-import java.util.Arrays;
+
+import org.junit.jupiter.api.Assertions;
 import shared.ResponseException;
 
 public class ServerFacade {
@@ -17,38 +19,35 @@ public class ServerFacade {
         serverUrl = url;
     }
 
-    public String register(String username, String password, String email) throws ResponseException {
-        try {
-            var path = "/user";
-            var request = new RegisterRequest(username, password, email);
-            return this.makeRequest("POST", path, request, String.class);
-        } catch (ResponseException e) {
-            return e.getMessage();
-        }
+    public AuthData register(String username, String password, String email) throws Exception {
+        var path = "/user";
+        var request = new RegisterRequest(username, password, email);
+        return this.makeRequest("POST", path, request, null, AuthData.class);
     }
 
-    public String login(String username, String password) throws ResponseException {
+    public AuthData login(String username, String password) throws ResponseException {
         var path = "/session";
         var request = new LoginRequest(username, password);
-        return this.makeRequest("POST", path, request, String.class);
+        return this.makeRequest("POST", path, request, null, AuthData.class);
     }
 
     public void logout(String username, String authToken) throws ResponseException {
         var path = "/session";
         var request = new AuthData(username, authToken);
-        this.makeRequest("DELETE", path, request.authToken(), null);
+        this.makeRequest("DELETE", path, request.authToken(), authToken, null);
     }
 
     public Object listGames(String username, String authToken) throws ResponseException {
         var path = "/game";
         var request = new AuthData(username, authToken);
-        return this.makeRequest("GET", path, request.authToken(), Object.class);
+        return this.makeRequest("GET", path, request.authToken(), null, Object.class);
     }
 
-    public Integer createGames(String username, String authToken) throws ResponseException {
+    // The request has to be an object because it will be serialized into json inside writeBody().
+    // Figure out how to pass in an object that can be deserialized but only contains the gameName.
+    public Integer createGame(String authToken, String gameName) throws ResponseException {
         var path = "/game";
-        var request = new AuthData(username, authToken);
-        return this.makeRequest("POST", path, request.authToken(), Integer.class);
+        return this.makeRequest("POST", path, gameName, authToken, Integer.class);
     }
 
     public void joinGame(String authToken, String playerColor, String gameID) throws ResponseException {
@@ -56,15 +55,19 @@ public class ServerFacade {
         ChessGame.TeamColor color = playerColor.equals("white") ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK;
         Integer id = Integer.parseInt(gameID);
         var request = new JoinGameRequest(authToken, color, id);
-        this.makeRequest("PUT", path, request, null);
+        this.makeRequest("PUT", path, request, null, null);
     }
 
-    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws ResponseException {
+    private <T> T makeRequest(String method, String path, Object request, String authToken, Class<T> responseClass) throws ResponseException {
         try {
             URL url = (new URI(serverUrl + path)).toURL();
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod(method);
             http.setDoOutput(true);
+
+            if (authToken != null) {
+                http.setRequestProperty("Authorization", authToken);
+            }
 
             writeBody(request, http);
             http.connect();

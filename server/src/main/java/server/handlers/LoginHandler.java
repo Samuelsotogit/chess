@@ -4,7 +4,7 @@ import data.transfer.objects.LoginRequest;
 import data.transfer.objects.RegisterOrLoginResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import server.ResponseException;
+import shared.ResponseException;
 import service.UserService;
 import spark.Request;
 import spark.Response;

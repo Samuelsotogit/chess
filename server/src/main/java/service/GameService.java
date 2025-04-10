@@ -5,7 +5,7 @@ import data.transfer.objects.GameRequest;
 import dataaccess.*;
 import model.AuthData;
 import model.GameData;
-import server.ResponseException;
+import shared.ResponseException;
 import model.GameID;
 
 import java.util.Collection;

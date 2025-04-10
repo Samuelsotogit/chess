@@ -1,5 +1,5 @@
 package server.handlers;
-import server.ResponseException;
+import shared.ResponseException;
 import service.UserService;
 import spark.Request;
 import spark.Response;

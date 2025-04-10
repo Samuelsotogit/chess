@@ -1,21 +1,18 @@
 package server.handlers;
 
-import chess.ChessGame;
 import data.transfer.objects.GameRequest;
 import data.transfer.objects.JoinGameRequest;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import server.ResponseException;
 import model.ErrorData;
 import model.GameData;
 import model.GameID;
 import service.GameService;
+import shared.ResponseException;
 import spark.Request;
 import spark.Response;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 
 public class GamesHandler {
 

@@ -1,38 +1,54 @@
 package ui;
 
+import chess.ChessGame;
+import model.AuthData;
+
 import java.util.Scanner;
 
 import static ui.EscapeSequences.*;
 
 public class Repl {
     private final ChessClient client;
-
+    private State state = State.SIGNEDOUT;
     public Repl(String serverUrl) {
         client = new ChessClient(serverUrl);
     }
 
     public void run() {
-        System.out.println(WHITE_KING + "Welcome to the best chess game ever. Sign in to start.");
-
+        System.out.println(WHITE_KING + "Welcome to the best chess game ever. Type Help to get started.");
         Scanner scanner = new Scanner(System.in);
-        var result = "";
-        while (!result.equals("quit")) {
-            printPrompt();
+        Object result = "";
+        while (!result.toString().equals("quit")) {
+            printPrompt(state);
             String line = scanner.nextLine();
-
             try {
                 result = client.eval(line);
-                System.out.print(result.toUpperCase());
+                if (result instanceof AuthData authData) {
+                    state = State.SIGNEDIN;
+                    System.out.println("Logged in as: " + authData.username());
+                    continue;
+                } else if (result instanceof String str) {
+                    if (str.equals("Logged out")) {
+                        state = State.SIGNEDOUT;
+                    } else if (str.equals("quit")) {
+                        state = State.SIGNEDOUT;
+                        break;
+                    }
+                }
+                System.out.println(result);
             } catch (Throwable e) {
                 var msg = e.toString();
                 System.out.print(msg);
             }
         }
-        System.out.println();
     }
 
-    private void printPrompt() {
-        System.out.print("\n" + SET_TEXT_UNDERLINE + SET_TEXT_COLOR_GREEN +
-                "[LOGGED_OUT]" + RESET_TEXT_UNDERLINE + " >>> " + RESET_TEXT_COLOR);
+    private void printPrompt(State state) {
+        switch (state) {
+            case SIGNEDOUT -> System.out.print(SET_TEXT_UNDERLINE + SET_TEXT_COLOR_GREEN +
+                    "[LOGGED_OUT]" + RESET_TEXT_UNDERLINE + " >>> " + RESET_TEXT_COLOR);
+            case SIGNEDIN -> System.out.print(SET_TEXT_UNDERLINE + SET_TEXT_COLOR_GREEN +
+                    "[LOGGED_in]" + RESET_TEXT_UNDERLINE + " >>> " + RESET_TEXT_COLOR);
+        }
     }
 }

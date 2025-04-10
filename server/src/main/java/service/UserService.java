@@ -3,7 +3,7 @@ import data.transfer.objects.LoginRequest;
 import data.transfer.objects.RegisterOrLoginResponse;
 import data.transfer.objects.RegisterRequest;
 import dataaccess.*;
-import server.ResponseException;
+import shared.ResponseException;
 import model.UserData;
 import model.AuthData;
 
