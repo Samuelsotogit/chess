@@ -2,12 +2,18 @@ package server;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.Request;
 import model.AuthData;
 import data.transfer.objects.*;
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
+import model.GameData;
 import model.GameID;
 import org.junit.jupiter.api.Assertions;
 import shared.ResponseException;
@@ -38,10 +44,11 @@ public class ServerFacade {
         this.makeRequest("DELETE", path, request.authToken(), authToken, null);
     }
 
-    public Object listGames(String username, String authToken) throws ResponseException {
+    public Collection<GameData> listGames(String username, String authToken) throws ResponseException {
         var path = "/game";
-        var request = new AuthData(username, authToken);
-        return this.makeRequest("GET", path, request.authToken(), null, Object.class);
+        JsonObject jsonObject = new Gson().toJsonTree(this.makeRequest("GET", path, null, authToken, Object.class)).getAsJsonObject();
+        JsonArray gamesArray = jsonObject.getAsJsonArray("games");
+        return new Gson().fromJson(gamesArray, new TypeToken<Collection<GameData>>() {}.getType());
     }
 
     public GameID createGame(String gameName, String authToken) throws ResponseException {

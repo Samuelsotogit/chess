@@ -1,10 +1,17 @@
 package ui;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.Request;
 import model.AuthData;
+import model.GameData;
 import model.GameID;
 import server.ServerFacade;
 import shared.ResponseException;
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Scanner;
 
 public class ChessClient {
@@ -34,7 +41,7 @@ public class ChessClient {
             } else if (state == State.SIGNEDIN) {
                 return switch (cmd) {
                     case "create" -> createGame(params);
-                    case "list" -> listGames();
+                    case "list" -> listGames(params);
                     case "join" -> joinGame(params);
                     case "observe" -> observeGame();
                     case "logout" -> logout();
@@ -67,7 +74,31 @@ public class ChessClient {
     }
 
     public String listGames(String... params) throws ResponseException {
-        return server.listGames(params[0], params[1]).toString();
+        Collection<GameData> games = server.listGames(username, authToken);
+        int index = 1;
+        StringBuilder result = new StringBuilder();
+        for (GameData game : games) {
+            result.append(index++);
+            result.append("-->");
+            result.append("Game: ");
+            result.append(game.gameName());
+            result.append(", ");
+            result.append("White player: ");
+            if (game.whiteUsername() == null) {
+                result.append("AVAILABLE");
+            } else {
+                result.append(game.whiteUsername());
+            }
+            result.append(", ");
+            result.append("Black player: ");
+            if (game.blackUsername() == null) {
+                result.append("AVAILABLE");
+            } else {
+                result.append(game.blackUsername());
+            }
+            result.append("\n");
+        }
+        return result.toString();
     }
 
     public String joinGame(String... params) throws ResponseException {
