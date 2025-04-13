@@ -8,6 +8,7 @@ import data.transfer.objects.*;
 import java.io.*;
 import java.net.*;
 
+import model.GameID;
 import org.junit.jupiter.api.Assertions;
 import shared.ResponseException;
 
@@ -43,11 +44,10 @@ public class ServerFacade {
         return this.makeRequest("GET", path, request.authToken(), null, Object.class);
     }
 
-    // The request has to be an object because it will be serialized into json inside writeBody().
-    // Figure out how to pass in an object that can be deserialized but only contains the gameName.
-    public Integer createGame(String authToken, String gameName) throws ResponseException {
+    public GameID createGame(String gameName, String authToken) throws ResponseException {
         var path = "/game";
-        return this.makeRequest("POST", path, gameName, authToken, Integer.class);
+        GameRequest request = new GameRequest(gameName, authToken);
+        return this.makeRequest("POST", path, request, authToken, GameID.class);
     }
 
     public void joinGame(String authToken, String playerColor, String gameID) throws ResponseException {

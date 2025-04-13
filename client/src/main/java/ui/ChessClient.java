@@ -1,4 +1,5 @@
 package ui;
+import com.sun.net.httpserver.Request;
 import model.AuthData;
 import model.GameID;
 import server.ServerFacade;
@@ -56,9 +57,13 @@ public class ChessClient {
         return authenticate(res);
     }
 
-    public Integer createGame(String... params) throws ResponseException {
+    public String createGame(String... params) throws ResponseException {
         String gameName = params[0];
-        return server.createGame(authToken, gameName);
+        GameID gameID = server.createGame(gameName, authToken);
+        if (gameID.gameID() == null) {
+            return "Something went wrong";
+        }
+        return String.format("You created a new game: %s", gameName);
     }
 
     public String listGames(String... params) throws ResponseException {

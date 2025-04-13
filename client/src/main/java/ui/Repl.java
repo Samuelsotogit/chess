@@ -15,7 +15,7 @@ public class Repl {
     }
 
     public void run() {
-        System.out.println(WHITE_KING + "Welcome to the best chess game ever. Type Help to get started.");
+        System.out.println(WHITE_KING + "Welcome to the best chess game ever. Type Help to view commands.");
         Scanner scanner = new Scanner(System.in);
         Object result = "";
         while (!result.toString().equals("quit")) {
