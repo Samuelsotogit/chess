@@ -60,9 +60,14 @@ public class ServerFacade {
     public void joinGame(String authToken, String playerColor, String gameID) throws ResponseException {
         var path = "/game";
         ChessGame.TeamColor color = playerColor.equals("white") ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK;
-        Integer id = Integer.parseInt(gameID);
+        int id;
+        try {
+            id = Integer.parseInt(gameID);
+        } catch (NumberFormatException e) {
+            throw new ResponseException(400, "Invalid game ID format: " + gameID);
+        }
         var request = new JoinGameRequest(authToken, color, id);
-        this.makeRequest("PUT", path, request, null, null);
+        this.makeRequest("PUT", path, request, authToken, null);
     }
 
     private <T> T makeRequest(String method, String path, Object request, String authToken, Class<T> responseClass) throws ResponseException {
@@ -124,8 +129,12 @@ public class ServerFacade {
         return response;
     }
 
-
     private boolean isSuccessful(int status) {
         return status / 100 == 2;
+    }
+
+    public void clear() throws ResponseException {
+        var path = "/db";
+        this.makeRequest("DELETE", path, null, null, null);
     }
 }

@@ -1,6 +1,7 @@
 package ui;
 
 import chess.ChessGame;
+import com.google.gson.JsonObject;
 import model.AuthData;
 
 import java.util.Scanner;
@@ -34,6 +35,9 @@ public class Repl {
                         state = State.SIGNEDOUT;
                         break;
                     }
+                    // Figure out how to draw the board
+                } else if (result instanceof JsonObject) {
+                    System.out.println(result);
                 }
                 System.out.println(result);
             } catch (Throwable e) {

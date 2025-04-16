@@ -1,18 +1,16 @@
 package ui;
+import chess.ChessGame;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
-import com.sun.net.httpserver.Request;
 import model.AuthData;
 import model.GameData;
 import model.GameID;
 import server.ServerFacade;
 import shared.ResponseException;
+import ui.PrintableBoard.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Scanner;
+import java.util.*;
 
 public class ChessClient {
     private final String serverUrl;
@@ -20,6 +18,8 @@ public class ChessClient {
     private State state = State.SIGNEDOUT;
     private String username;
     private String authToken;
+    private PrintableBoard board = new PrintableBoard(new ChessGame());
+//    private HashMap<Integer, GameData> gameMap = new HashMap<>();
 
     public ChessClient(String serverUrl) {
         this.serverUrl = serverUrl;
@@ -78,32 +78,27 @@ public class ChessClient {
         int index = 1;
         StringBuilder result = new StringBuilder();
         for (GameData game : games) {
-            result.append(index++);
-            result.append("-->");
-            result.append("Game: ");
-            result.append(game.gameName());
-            result.append(", ");
-            result.append("White player: ");
-            if (game.whiteUsername() == null) {
-                result.append("AVAILABLE");
-            } else {
-                result.append(game.whiteUsername());
-            }
-            result.append(", ");
-            result.append("Black player: ");
-            if (game.blackUsername() == null) {
-                result.append("AVAILABLE");
-            } else {
-                result.append(game.blackUsername());
-            }
-            result.append("\n");
+            result.append(String.format("%d-->Game: %s, White player: %s, Black player: %s\n",
+                    index,
+                    game.gameName(),
+                    game.whiteUsername() == null ? "AVAILABLE" : game.whiteUsername(),
+                    game.blackUsername() == null ? "AVAILABLE" : game.blackUsername()));
+            index++;
         }
         return result.toString();
     }
 
     public String joinGame(String... params) throws ResponseException {
-        server.joinGame(params[0], params[1], params[2]);
-        return "Join game";
+        server.joinGame(authToken, params[1], params[0]);
+        Integer id = Integer.parseInt(params[0]);
+        ChessGame.TeamColor color;
+        if (Objects.equals(params[1], "white")) {
+            color = ChessGame.TeamColor.WHITE;
+        }
+        else {
+            color = ChessGame.TeamColor.BLACK;
+        }
+        return board.stringify(color);
     }
 
     public String observeGame() {
@@ -119,7 +114,7 @@ public class ChessClient {
     }
 
     public String exitProgram() {
-        return "Goodbye!";
+        return "quit";
     }
 
     private AuthData authenticate(AuthData res) {
@@ -132,13 +127,11 @@ public class ChessClient {
     public String help() {
         if (state == State.SIGNEDOUT) {
             return """
-                
                 Commands:
                 register <username> <password> <email>
                 login <username> <password>
                 quit - playing chess
-                help - with commands
-                """;
+                help - with commands""";
         } else if (state == State.SIGNEDIN) {
             return """
                 Commands:
@@ -146,8 +139,7 @@ public class ChessClient {
                 list - games
                 join <gameID> [WHITE|BLACK] - a game
                 observe <gameID> - a game
-                logout - when you are done
-                """;
+                logout - when you are done""";
         }
         return """
                 Commands:

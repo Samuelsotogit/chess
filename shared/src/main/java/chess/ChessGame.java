@@ -367,7 +367,6 @@ public class ChessGame {
      * @return the chessboard
      */
     public ChessBoard getBoard() {
-        System.out.println("Getting board:\n" + this.board);
         return this.board;
     }
 }
