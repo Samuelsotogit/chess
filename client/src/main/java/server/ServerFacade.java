@@ -5,22 +5,21 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import com.sun.net.httpserver.Request;
 import model.AuthData;
 import data.transfer.objects.*;
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
 import java.util.Collection;
 
 import model.GameData;
 import model.GameID;
-import org.junit.jupiter.api.Assertions;
 import shared.ResponseException;
+import ui.PrintableBoard;
 
 public class ServerFacade {
 
     private final String serverUrl;
+    private PrintableBoard board = new PrintableBoard(new ChessGame());
 
     public ServerFacade(String url) {
         serverUrl = url;

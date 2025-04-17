@@ -15,7 +15,7 @@ public class PrintableBoard {
     private ChessGame game;
     private static Shade alternatinShade;
 
-    PrintableBoard(ChessGame game) {
+    public PrintableBoard(ChessGame game) {
         this.game = game;
     }
 
