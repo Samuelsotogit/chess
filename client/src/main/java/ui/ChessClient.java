@@ -1,29 +1,29 @@
 package ui;
-import chess.ChessBoard;
 import chess.ChessGame;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import model.AuthData;
 import model.GameData;
 import model.GameID;
 import server.ServerFacade;
 import shared.ResponseException;
-import ui.PrintableBoard.*;
+import websocket.NotificationHandler;
+import websocket.WebSocketFacade;
 
 import java.util.*;
 
 public class ChessClient {
     private final String serverUrl;
     private final ServerFacade server;
+    private WebSocketFacade webSocketFacade;
+    private final NotificationHandler notificationHandler;
     private State state = State.SIGNEDOUT;
     private String username;
     private String authToken;
     private final PrintableBoard board = new PrintableBoard(new ChessGame());
 
-    public ChessClient(String serverUrl) {
-        this.serverUrl = serverUrl;
+    public ChessClient(String serverUrl, NotificationHandler notificationHandler) {
         server = new ServerFacade(serverUrl);
+        this.serverUrl = serverUrl;
+        this.notificationHandler = notificationHandler;
     }
 
     public Object eval(String input) {
@@ -138,10 +138,13 @@ public class ChessClient {
         return "quit";
     }
 
-    private AuthData authenticate(AuthData res) {
+    private AuthData authenticate(AuthData res) throws ResponseException {
         username = res.username();
         authToken = res.authToken();
         state = State.SIGNEDIN;
+        if (webSocketFacade == null) {
+            webSocketFacade = new WebSocketFacade(serverUrl, notificationHandler);
+        }
         return res;
     }
 

@@ -3,16 +3,19 @@ package ui;
 import chess.ChessGame;
 import com.google.gson.JsonObject;
 import model.AuthData;
+import websocket.NotificationHandler;
 
+import javax.management.Notification;
 import java.util.Scanner;
 
 import static ui.EscapeSequences.*;
 
-public class Repl {
+public class Repl implements NotificationHandler {
     private final ChessClient client;
     private State state = State.SIGNEDOUT;
+
     public Repl(String serverUrl) {
-        client = new ChessClient(serverUrl);
+        client = new ChessClient(serverUrl, this);
     }
 
     public void run() {
@@ -54,5 +57,11 @@ public class Repl {
             case SIGNEDIN -> System.out.print(SET_TEXT_UNDERLINE + SET_TEXT_COLOR_GREEN +
                     "[LOGGED_in]" + RESET_TEXT_UNDERLINE + " >>> " + RESET_TEXT_COLOR);
         }
+    }
+
+    @Override
+    public void notify(websocket.messages.Notification notification) {
+        System.out.println(SET_TEXT_COLOR_RED + "Notification: " + notification.getMessage() + RESET_TEXT_COLOR);
+        printPrompt(state);
     }
 }
